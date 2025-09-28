@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
+        'last_login_at',
+        'last_login_ip',
     ];
 
     /**
@@ -43,6 +46,27 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
+
+    /**
+     * Update last login information
+     */
+    public function updateLastLogin($ip = null)
+    {
+        $this->update([
+            'last_login_at' => now(),
+            'last_login_ip' => $ip ?? request()->ip(),
+        ]);
     }
 }
