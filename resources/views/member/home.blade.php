@@ -81,7 +81,7 @@
             </div>
 
             <div class="info-section info-section--chest">
-                <div class="loyalty-chest">
+                <div class="loyalty-chest" onclick="openDailyRewardModal()">
                     <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/loyalty/chest-available.webp?v=20250528" alt="Loyalty Chest" class="chest-icon">
                 </div>
             </div>
@@ -445,5 +445,450 @@
             }
         });
     });
+
+    // Daily Reward Modal Functions
+    let dailyRewardClaimed = false;
+    let countdownInterval = null;
+
+    function openDailyRewardModal() {
+        const modal = document.getElementById('dailyRewardModal');
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Show appropriate state
+            if (dailyRewardClaimed) {
+                showClaimedState();
+            } else {
+                showUnclaimedState();
+            }
+        }
+    }
+
+    function closeDailyRewardModal() {
+        const modal = document.getElementById('dailyRewardModal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+        }
+    }
+
+    function showUnclaimedState() {
+        document.getElementById('unclaimedState').style.display = 'block';
+        document.getElementById('claimedState').style.display = 'none';
+    }
+
+    function showClaimedState() {
+        document.getElementById('unclaimedState').style.display = 'none';
+        document.getElementById('claimedState').style.display = 'block';
+        startCountdown();
+    }
+
+    function claimReward() {
+        dailyRewardClaimed = true;
+        
+        // Change chest icon to open
+        const chestIcons = document.querySelectorAll('.chest-icon');
+        chestIcons.forEach(icon => {
+            icon.src = 'https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/loyalty/chest-open.webp?v=20250528';
+        });
+        
+        showClaimedState();
+    }
+
+    function startCountdown() {
+        // Set end time to 8 hours, 8 minutes, 5 seconds from now
+        const endTime = new Date();
+        endTime.setHours(endTime.getHours() + 8);
+        endTime.setMinutes(endTime.getMinutes() + 8);
+        endTime.setSeconds(endTime.getSeconds() + 5);
+
+        updateCountdown(endTime);
+        
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+        
+        countdownInterval = setInterval(() => {
+            updateCountdown(endTime);
+        }, 1000);
+    }
+
+    function updateCountdown(endTime) {
+        const now = new Date();
+        const diff = endTime - now;
+
+        if (diff <= 0) {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            document.getElementById('hoursDigit').textContent = '0';
+            document.getElementById('minutesDigit').textContent = '0';
+            document.getElementById('secondsDigit').textContent = '0';
+            return;
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('hoursDigit').textContent = hours;
+        document.getElementById('minutesDigit').textContent = minutes;
+        document.getElementById('secondsDigit').textContent = seconds;
+    }
+
+    // Close modal with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDailyRewardModal();
+        }
+    });
 </script>
 @endpush
+
+<!-- Daily Reward Modal -->
+<div id="dailyRewardModal" class="daily-reward-modal" style="display: none;">
+    <div class="modal-overlay" onclick="closeDailyRewardModal()"></div>
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeDailyRewardModal()">×</button>
+        
+        <!-- Unclaimed State -->
+        <div id="unclaimedState" class="reward-state">
+            <div class="chest-image-container">
+                <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/loyalty/chest-available.webp?v=20250528" alt="Chest Closed" class="chest-modal-image">
+            </div>
+            
+            <h2 class="modal-title">HADIAH LOGIN HARIAN</h2>
+            
+            <p class="modal-description">
+                Kembali setiap hari untuk mengambil bonus EXP gratis!
+            </p>
+            
+            <p class="modal-subdescription">
+                Regangkan EXP dengan konsekuen 7 hari berturut-turut.<br>
+                Login Harian untuk mendapat level/royalitas dan mendapatkan yang lebih besar jalan ini! Letak in<br>
+                mendapat kan berubah dalam 24 setelah klaim terakhir.
+            </p>
+            
+            <button class="claim-button" onclick="claimReward()">
+                KLAIM SEKARANG
+            </button>
+        </div>
+        
+        <!-- Claimed State -->
+        <div id="claimedState" class="reward-state" style="display: none;">
+            <div class="chest-image-container">
+                <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/loyalty/chest-open.webp?v=20250528" alt="Chest Open" class="chest-modal-image">
+            </div>
+            
+            <div class="double-exp-badge">+DOUBLE EXP</div>
+            
+            <p class="modal-description">
+                Double EXP adalah event yang dapat diisual dan dapat<br>
+                manakalan akan langsung dan kuis dari EXP pada semua hukum.
+            </p>
+            
+            <p class="countdown-label">EXP ganda akan berakhir dalam:</p>
+            
+            <div class="countdown-timer">
+                <div class="timer-unit">
+                    <div class="timer-digit" id="hoursDigit">8</div>
+                    <div class="timer-label">JAM</div>
+                </div>
+                <div class="timer-separator">:</div>
+                <div class="timer-unit">
+                    <div class="timer-digit" id="minutesDigit">8</div>
+                    <div class="timer-label">MENIT</div>
+                </div>
+                <div class="timer-separator">:</div>
+                <div class="timer-unit">
+                    <div class="timer-digit" id="secondsDigit">5</div>
+                    <div class="timer-label">DETIK</div>
+                </div>
+            </div>
+            
+            <button class="claimed-button" disabled>
+                SUDAH DIKLAIM
+            </button>
+            
+            <p class="next-claim-text">
+                Klaim hadiah lagi dalam: <span class="next-claim-emoji">😊</span> <span class="next-claim-time">10:41:48</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Daily Reward Modal */
+.daily-reward-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.modal-content {
+    position: relative;
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    border: 2px solid #444;
+    border-radius: 16px;
+    padding: 40px 24px 24px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    z-index: 10000;
+    animation: modalSlideIn 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    font-weight: 300;
+}
+
+.modal-close:hover {
+    color: #ff9500;
+}
+
+.chest-image-container {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.chest-modal-image {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+}
+
+.modal-title {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.modal-description {
+    color: #d1d5db;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    padding: 0 12px;
+}
+
+.modal-subdescription {
+    color: #9ca3af;
+    font-size: 11px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    padding: 0 8px;
+}
+
+.claim-button {
+    background: linear-gradient(135deg, #ff9500 0%, #ff8000 100%);
+    color: #000;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    max-width: 280px;
+}
+
+.claim-button:hover {
+    background: linear-gradient(135deg, #ff8000 0%, #ff7000 100%);
+    transform: scale(1.02);
+}
+
+.claim-button:active {
+    transform: scale(0.98);
+}
+
+/* Claimed State */
+.double-exp-badge {
+    color: #4ade80;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+    letter-spacing: 1px;
+}
+
+.countdown-label {
+    color: white;
+    font-size: 13px;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.timer-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.timer-digit {
+    background: #4a4a4a;
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
+    padding: 12px 16px;
+    border-radius: 8px;
+    min-width: 60px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.timer-label {
+    color: #9ca3af;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.timer-separator {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    padding-bottom: 24px;
+}
+
+.claimed-button {
+    background: #6b7280;
+    color: #d1d5db;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    max-width: 280px;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.next-claim-text {
+    color: #9ca3af;
+    font-size: 12px;
+    margin-top: 16px;
+}
+
+.next-claim-emoji {
+    display: inline-block;
+    margin: 0 4px;
+}
+
+.next-claim-time {
+    color: #4ade80;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 32px 20px 20px;
+        max-width: 340px;
+    }
+
+    .chest-modal-image {
+        width: 150px;
+        height: 150px;
+    }
+
+    .modal-title {
+        font-size: 16px;
+    }
+
+    .timer-digit {
+        font-size: 24px;
+        padding: 10px 12px;
+        min-width: 50px;
+    }
+
+    .countdown-timer {
+        gap: 8px;
+        padding: 12px;
+    }
+}
+
+/* Cursor pointer for chest */
+.loyalty-chest {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.loyalty-chest:hover {
+    transform: scale(1.1);
+}
+
+.loyalty-chest:active {
+    transform: scale(0.95);
+}
+</style>
