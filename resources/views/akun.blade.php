@@ -73,9 +73,92 @@
         </div>
     </div>
 
-    <!-- Account Content Area (Empty for now) -->
+    <!-- Account Content Area -->
     <div class="account-content">
-        <!-- Content will be added here later -->
+        <!-- Account Tabs -->
+        <div class="account-tabs">
+            <button class="tab-item active">
+                <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                </svg>
+                <span class="tab-label">AKUN SAYA</span>
+            </button>
+            <button class="tab-item">
+                <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="tab-label">UBAH KATA SANDI</span>
+            </button>
+            <button class="tab-item">
+                <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                </svg>
+                <span class="tab-label">PROFIL SAYA</span>
+            </button>
+            <button class="tab-item">
+                <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                </svg>
+                <span class="tab-label">RIWAYAT PENUKARAN</span>
+            </button>
+        </div>
+
+        <!-- Account Information Section -->
+        <div class="info-section-wrapper">
+            <div class="info-header">
+                INFORMASI AKUN
+            </div>
+
+            <div class="info-content">
+                <div class="info-row">
+                    <div class="info-label">NAMA LENGKAP</div>
+                    <div class="info-separator">:</div>
+                    <div class="info-value">{{ Auth::user()->name ?? '-' }}</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">EMAIL</div>
+                    <div class="info-separator">:</div>
+                    <div class="info-value">
+                        @if(Auth::user()->email)
+                            {{ Auth::user()->email }}
+                        @else
+                            <div class="email-alert">
+                                <svg class="alert-icon" width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Alamat email belum di isi!</span>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">NAMA PENGGUNA</div>
+                    <div class="info-separator">:</div>
+                    <div class="info-value">{{ Auth::user()->username ?? '-' }}</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">ID PENGGUNA APLIKASI MOBILE</div>
+                    <div class="info-separator">:</div>
+                    <div class="info-value">
+                        @if(Auth::user()->username)
+                            {{ '7L5' . strtoupper(Auth::user()->username) . '@NXT' }}
+                        @else
+                            -
+                        @endif
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">MATA UANG</div>
+                    <div class="info-separator">:</div>
+                    <div class="info-value">IDR</div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -329,8 +412,146 @@
 
 /* Account Content Area */
 .account-content {
-    padding: 20px 16px;
+    padding: 0;
     min-height: 300px;
+    background: #1a1a1a;
+}
+
+/* Account Tabs */
+.account-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: #2d2d2d;
+    border-bottom: 1px solid #333;
+    gap: 0;
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 8px;
+    background: #2d2d2d;
+    border: none;
+    border-right: 1px solid #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tab-item:last-child {
+    border-right: none;
+}
+
+.tab-item.active {
+    background: #ff9500;
+}
+
+.tab-item:not(.active):hover {
+    background: #3d3d3d;
+}
+
+.tab-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 6px;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.tab-item.active .tab-icon {
+    color: #000;
+}
+
+.tab-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    color: #999;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    transition: color 0.3s ease;
+}
+
+.tab-item.active .tab-label {
+    color: #000;
+}
+
+/* Info Section Wrapper */
+.info-section-wrapper {
+    margin: 16px;
+    background: #1a1a1a;
+}
+
+.info-header {
+    background: #ff9500;
+    color: #000;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 16px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.info-content {
+    background: #2d2d2d;
+    padding: 0;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1.2fr;
+    align-items: start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: right;
+    letter-spacing: 0.3px;
+    line-height: 1.4;
+}
+
+.info-separator {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.info-value {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+    word-break: break-word;
+}
+
+/* Email Alert */
+.email-alert {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #dc2626;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.alert-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
 }
 
 /* Desktop adjustments */
