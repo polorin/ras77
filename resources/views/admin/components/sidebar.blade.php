@@ -75,7 +75,7 @@
             </div>
 
             <!-- Promosi -->
-            <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors group">
+            <a href="{{ route('admin.promosi.index') }}" class="flex items-center px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.promosi.*') ? 'bg-indigo-600' : 'hover:bg-gray-800' }}">
                 <i class="fas fa-bullhorn w-5 mr-3"></i>
                 <span class="font-medium">Promosi</span>
             </a>
@@ -112,7 +112,7 @@
                     <a href="#" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm text-gray-300 hover:text-white">
                         <i class="fas fa-image text-xs mr-2"></i> Gambar
                     </a>
-                    <a href="#" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm text-gray-300 hover:text-white">
+                    <a href="{{ route('admin.settings.umum') }}" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm {{ request()->routeIs('admin.settings.umum') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:text-white' }}">
                         <i class="fas fa-sliders-h text-xs mr-2"></i> Pengaturan Umum
                     </a>
                 </div>

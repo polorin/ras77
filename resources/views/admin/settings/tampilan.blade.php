@@ -6,6 +6,9 @@
     <title>Pengaturan Tampilan - Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    @if(!empty($settings['favicon']))
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('storage/favicons/' . $settings['favicon']) }}">
+    @endif
     <style>
         .sidebar-scroll::-webkit-scrollbar {
             width: 4px;
@@ -131,6 +134,42 @@
                                         <img src="{{ asset('storage/logos/' . $settings['logo']) }}" alt="Logo" class="h-12">
                                     @else
                                         RAS77
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Favicon Situs</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                                @if(isset($settings['favicon']) && $settings['favicon'])
+                                    <div class="mb-3 flex items-center justify-center space-x-3">
+                                        <img src="{{ asset('storage/favicons/' . $settings['favicon']) }}" alt="Favicon Saat Ini" class="w-10 h-10 rounded">
+                                        <span class="text-xs text-gray-500">Favicon saat ini</span>
+                                    </div>
+                                @endif
+                                <input type="file"
+                                       name="favicon"
+                                       id="favicon"
+                                       accept="image/png,image/x-icon,image/svg+xml,image/webp,image/jpeg"
+                                       class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                <p class="text-xs text-gray-500 mt-2">Disarankan ukuran 32x32 atau 64x64 piksel. Format: PNG, JPG, SVG, WEBP, ICO (Max: 512KB)</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Preview Favicon</label>
+                            <div class="border rounded-lg p-4 bg-gray-50 h-32 flex items-center justify-center">
+                                <div id="favicon-preview">
+                                    @if(isset($settings['favicon']) && $settings['favicon'])
+                                        <img src="{{ asset('storage/favicons/' . $settings['favicon']) }}" alt="Favicon Preview" class="w-12 h-12">
+                                    @else
+                                        <div class="text-gray-400 text-sm text-center">
+                                            <i class="fas fa-icons text-2xl mb-2"></i>
+                                            <p>Belum ada favicon</p>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -307,6 +346,64 @@
                                        placeholder="#1a1a1a">
                             </div>
                         </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Warna Background Sidebar Menu
+                            </label>
+                            <div class="flex items-center space-x-3">
+                                <input type="color"
+                                       name="sidebar_bg_color"
+                                       id="sidebar_bg_color"
+                                       value="{{ $settings['sidebar_bg_color'] ?? '#0f0f0f' }}"
+                                       class="h-10 w-20 border rounded cursor-pointer">
+                                <input type="text"
+                                       id="sidebar_bg_hex"
+                                       value="{{ $settings['sidebar_bg_color'] ?? '#0f0f0f' }}"
+                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                                       placeholder="#0f0f0f">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Warna Item & Transparansi Sidebar Menu
+                            </label>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <input type="color"
+                                           name="sidebar_menu_bg_color"
+                                           id="sidebar_menu_bg_color"
+                                           value="{{ $settings['sidebar_menu_bg_color'] ?? '#d77f03' }}"
+                                           class="h-10 w-20 border rounded cursor-pointer">
+                                    <input type="text"
+                                           id="sidebar_menu_bg_hex"
+                                           value="{{ $settings['sidebar_menu_bg_color'] ?? '#d77f03' }}"
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                                           placeholder="#d77f03">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Transparansi (0 - 1)</label>
+                                    <div class="flex items-center space-x-3">
+                                        <input type="range"
+                                               name="sidebar_menu_bg_opacity"
+                                               id="sidebar_menu_bg_opacity"
+                                               min="0"
+                                               max="1"
+                                               step="0.05"
+                                               value="{{ $settings['sidebar_menu_bg_opacity'] ?? 0.7 }}"
+                                               class="flex-1">
+                                        <input type="number"
+                                               id="sidebar_menu_bg_opacity_input"
+                                               value="{{ $settings['sidebar_menu_bg_opacity'] ?? 0.7 }}"
+                                               min="0"
+                                               max="1"
+                                               step="0.05"
+                                               class="w-20 px-2 py-1 border border-gray-300 rounded-lg text-sm">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -330,7 +427,7 @@
                     <!-- Preview Colors -->
                     <div class="mt-6 p-4 bg-gray-50 rounded-lg">
                         <h4 class="text-sm font-medium text-gray-700 mb-3">Preview Warna:</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 text-xs">
                             <div class="text-center">
                                 <div class="w-full h-16 rounded mb-2 preview-main-bg" style="background-color: {{ $settings['main_bg_color'] ?? '#111827' }};"></div>
                                 <span class="text-gray-600">Background Utama</span>
@@ -338,6 +435,18 @@
                             <div class="text-center">
                                 <div class="w-full h-16 rounded mb-2" style="background-color: {{ $settings['header_bg_color'] ?? '#1a1a1a' }};"></div>
                                 <span class="text-gray-600">Header</span>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-full h-16 rounded mb-2 preview-sidebar-bg" style="background-color: {{ $settings['sidebar_bg_color'] ?? '#0f0f0f' }};"></div>
+                                <span class="text-gray-600">Sidebar Menu</span>
+                            </div>
+                            <div class="text-center">
+                                @php
+                                    $sidebarMenuHex = $settings['sidebar_menu_bg_color'] ?? '#d77f03';
+                                    $sidebarMenuOpacity = $settings['sidebar_menu_bg_opacity'] ?? 0.7;
+                                @endphp
+                                <div class="w-full h-16 rounded mb-2 preview-sidebar-menu-item" style="background-color: {{ $sidebarMenuHex }}; opacity: {{ $sidebarMenuOpacity }};"></div>
+                                <span class="text-gray-600">Item Sidebar</span>
                             </div>
                             <div class="text-center">
                                 <div class="w-full h-16 rounded mb-2" style="background-color: {{ $settings['bottom_nav_bg_color'] ?? '#1a1a1a' }};"></div>
@@ -713,6 +822,56 @@
         document.getElementById('header_bg_hex').addEventListener('input', function(e) {
             document.getElementById('header_bg_color').value = e.target.value;
         });
+
+        document.getElementById('sidebar_bg_color').addEventListener('change', function(e) {
+            document.getElementById('sidebar_bg_hex').value = e.target.value;
+            document.querySelectorAll('.preview-sidebar-bg').forEach(function(el) {
+                el.style.backgroundColor = e.target.value;
+            });
+        });
+
+        document.getElementById('sidebar_bg_hex').addEventListener('input', function(e) {
+            document.getElementById('sidebar_bg_color').value = e.target.value;
+            document.querySelectorAll('.preview-sidebar-bg').forEach(function(el) {
+                el.style.backgroundColor = e.target.value;
+            });
+        });
+
+        function updateSidebarMenuItemPreview(color, opacity) {
+            document.querySelectorAll('.preview-sidebar-menu-item').forEach(function(el) {
+                el.style.backgroundColor = color;
+                el.style.opacity = opacity;
+            });
+        }
+
+        document.getElementById('sidebar_menu_bg_color').addEventListener('change', function(e) {
+            document.getElementById('sidebar_menu_bg_hex').value = e.target.value;
+            const opacity = document.getElementById('sidebar_menu_bg_opacity').value;
+            updateSidebarMenuItemPreview(e.target.value, opacity);
+        });
+
+        document.getElementById('sidebar_menu_bg_hex').addEventListener('input', function(e) {
+            document.getElementById('sidebar_menu_bg_color').value = e.target.value;
+            const opacity = document.getElementById('sidebar_menu_bg_opacity').value;
+            updateSidebarMenuItemPreview(e.target.value, opacity);
+        });
+
+        document.getElementById('sidebar_menu_bg_opacity').addEventListener('input', function(e) {
+            document.getElementById('sidebar_menu_bg_opacity_input').value = e.target.value;
+            const color = document.getElementById('sidebar_menu_bg_color').value;
+            updateSidebarMenuItemPreview(color, e.target.value);
+        });
+
+        document.getElementById('sidebar_menu_bg_opacity_input').addEventListener('input', function(e) {
+            let value = parseFloat(e.target.value);
+            if (isNaN(value)) {
+                value = 0;
+            }
+            value = Math.min(1, Math.max(0, value));
+            document.getElementById('sidebar_menu_bg_opacity').value = value;
+            const color = document.getElementById('sidebar_menu_bg_color').value;
+            updateSidebarMenuItemPreview(color, value);
+        });
         
         document.getElementById('bottom_nav_bg_color').addEventListener('change', function(e) {
             document.getElementById('bottom_nav_hex').value = e.target.value;
@@ -740,17 +899,37 @@
         });
         
         // Preview logo
-        document.getElementById('logo').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('logo-preview').innerHTML =
-                        `<img src="${e.target.result}" alt="Logo Preview" class="h-12">`;
+        const logoInput = document.getElementById('logo');
+        if (logoInput) {
+            logoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        document.getElementById('logo-preview').innerHTML =
+                            `<img src="${evt.target.result}" alt="Logo Preview" class="h-12">`;
+                    };
+                    reader.readAsDataURL(file);
                 }
-                reader.readAsDataURL(file);
-            }
-        });
+            });
+        }
+
+        const faviconInput = document.getElementById('favicon');
+        if (faviconInput) {
+            faviconInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const preview = document.getElementById('favicon-preview');
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        preview.innerHTML = `<img src="${evt.target.result}" alt="Favicon Preview" class="w-12 h-12">`;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.innerHTML = `<div class="text-gray-400 text-sm text-center"><i class="fas fa-icons text-2xl mb-2"></i><p>Belum ada favicon</p></div>`;
+                }
+            });
+        }
 
         // Preview Pragmatic Play logo
         const pragmaticLogoInput = document.getElementById('pragmatic_logo');

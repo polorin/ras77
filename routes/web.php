@@ -2,18 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\Auth\MemberAuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\GameController;
+use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\HomeController;
 
 // Main Website Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/promosi', [HomeController::class, 'promosi'])->name('promosi');
-Route::get('/login', [HomeController::class, 'login'])->name('login');
-Route::get('/register', [HomeController::class, 'register'])->name('register');
+Route::get('/login', [HomeController::class, 'login'])->middleware('guest')->name('login');
+Route::get('/register', [HomeController::class, 'register'])->middleware('guest')->name('register');
 Route::get('/hubungi', [HomeController::class, 'hubungi'])->name('hubungi');
 Route::get('/akun', [HomeController::class, 'akun'])->name('akun');
+Route::middleware(['auth', 'prevent-back-history'])->get('/member/home', [HomeController::class, 'memberHome'])->name('member.home');
+Route::post('/register', [MemberAuthController::class, 'register'])->middleware('guest')->name('register.submit');
+Route::post('/login', [MemberAuthController::class, 'login'])->middleware('guest')->name('login.submit');
+Route::post('/logout', [MemberAuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Test route
 Route::get('/test', function () {
@@ -42,6 +48,8 @@ Route::prefix('admin')->group(function () {
         Route::prefix('settings')->group(function () {
             Route::get('/tampilan', [SettingsController::class, 'tampilan'])->name('admin.settings.tampilan');
             Route::post('/tampilan', [SettingsController::class, 'updateTampilan'])->name('admin.settings.tampilan.update');
+            Route::get('/umum', [SettingsController::class, 'umum'])->name('admin.settings.umum');
+            Route::post('/umum', [SettingsController::class, 'updateUmum'])->name('admin.settings.umum.update');
         });
 
         // Games management routes
@@ -56,6 +64,10 @@ Route::prefix('admin')->group(function () {
             Route::patch('/{game}/toggle-active', [GameController::class, 'toggleActive'])->name('toggle-active');
             Route::post('/bulk-store', [GameController::class, 'bulkStore'])->name('bulk-store');
         });
+
+        Route::resource('promosi', PromotionController::class)
+            ->except(['show'])
+            ->names('admin.promosi');
     });
     
     // Redirect /admin to login

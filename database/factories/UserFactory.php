@@ -23,12 +23,20 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $paymentMethod = fake()->randomElement(['bank', 'ewallet']);
+
         return [
+            'username' => fake()->unique()->userName(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'whatsapp' => '62' . fake()->numerify('8##########'),
+            'payment_method' => $paymentMethod,
+            'payment_provider' => $paymentMethod === 'bank' ? 'Bank Mandiri' : 'OVO',
+            'account_number' => fake()->numerify('##########'),
+            'account_holder_name' => fake()->name(),
         ];
     }
 

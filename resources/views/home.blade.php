@@ -15,6 +15,7 @@
         </div>
     </div>
 
+
     <!-- Image Slider -->
 <div class="relative overflow-hidden w-full">
     <div class="slider-container h-48 sm:h-56 md:h-64 lg:h-80 xl:h-96 w-full">
@@ -27,7 +28,7 @@
                              class="w-full h-full object-cover sm:object-contain md:object-cover">
                         </div>
                     @endforeach
-                    
+
                     <!-- Slider dots -->
                 <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
                         @foreach($settings['slider_images'] as $index => $image)
@@ -51,20 +52,22 @@
             @endif
         </div>
     </div>
-    
+
     <!-- Action Buttons -->
-<div class="grid grid-cols-2">
-        <button onclick="window.location.href='{{ route('register') }}'"
-            class="text-white font-bold py-4 px-4 hover:opacity-90 transition-opacity"
-            style="background-color: rgb(215, 127, 3);">
-            Daftar
-        </button>
-        <button onclick="window.location.href='{{ route('login') }}'"
-            class="bg-gray-700 text-white font-bold py-4 px-4 hover:bg-gray-800 transition-colors">
-            Masuk
-        </button>
-    </div>
-    
+    @guest
+        <div class="grid grid-cols-2">
+            <button onclick="window.location.href='{{ route('register') }}'"
+                class="text-white font-bold py-3 px-4 hover:opacity-90 transition-opacity"
+                style="background-color: rgb(215, 127, 3);">
+                Daftar
+            </button>
+            <button type="button" data-login-modal-trigger
+                class="bg-gray-700 text-white font-bold py-3 px-4 hover:bg-gray-800 transition-colors">
+                Masuk
+            </button>
+        </div>
+    @endguest
+
 <!-- Jackpot Play Section -->
 <div class="py-4">
     <!-- Jackpot Play Text dengan Logo Pragmatic diatas kata PLAY -->
@@ -74,7 +77,7 @@
             <span class="font-black text-3xl md:text-4xl lg:text-5xl xl:text-6xl uppercase tracking-wide" style="color: #fd6f16;">
                 JACKPOT
             </span>
-            
+
             <!-- Container untuk Logo + PLAY -->
             <div class="flex flex-col items-center">
                 <!-- Logo Pragmatic Play diatas PLAY -->
@@ -88,7 +91,7 @@
                         <span class="text-white font-bold tracking-wide">PRAGMATIC</span>
                     </div>
                 @endif
-                
+
                 <!-- Teks PLAY berwarna biru -->
                 <span class="font-black text-3xl md:text-4xl lg:text-5xl xl:text-6xl uppercase tracking-wide text-blue-500">
                     PLAY
@@ -96,7 +99,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Progressive Jackpot - Full width ke samping layar -->
     <div class="mb-1">
         <div class="jackpot-display-container">
@@ -124,7 +127,7 @@
                             <div class="led-dot"></div>
                             <div class="led-dot"></div>
                         </div>
-                        
+
                         <!-- Bottom dots -->
                         <div class="led-dots-bottom">
                             <div class="led-dot"></div>
@@ -143,7 +146,7 @@
                             <div class="led-dot"></div>
                             <div class="led-dot"></div>
                         </div>
-                        
+
                         <!-- Left dots -->
                         <div class="led-dots-left">
                             <div class="led-dot"></div>
@@ -152,7 +155,7 @@
                             <div class="led-dot"></div>
                             <div class="led-dot"></div>
                         </div>
-                        
+
                         <!-- Right dots -->
                         <div class="led-dots-right">
                             <div class="led-dot"></div>
@@ -162,7 +165,7 @@
                             <div class="led-dot"></div>
                         </div>
                     </div>
-                    
+
                     <!-- Jackpot text display -->
                     <div class="jackpot-text-display">
                         <span class="idr-text">IDR</span> <span id="progressive_jackpot">8.960.069.342</span>
@@ -171,21 +174,22 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <!-- Game Categories Slide Menu -->
-<div class="game-categories-container py-4">
+<div class="game-categories-container">
     <div class="game-categories-slider" style="background-color: {{ $settings['game_menu_bg_color'] ?? '#1a1a1a' }};">
         <!-- Navigation Arrow Left -->
         <button class="game-nav-arrow game-nav-left" id="gameNavLeft">
             <i class="fas fa-chevron-left"></i>
         </button>
-        
+
         <!-- Navigation Arrow Right -->
         <button class="game-nav-arrow game-nav-right" id="gameNavRight">
             <i class="fas fa-chevron-right"></i>
         </button>
-        
+
         <div class="game-categories-track" id="gameSlider">
             <!-- Hot Games -->
             <div class="game-category-item">
@@ -196,7 +200,7 @@
                 @endif
                 <span class="category-label">HOT GAMES</span>
             </div>
-            
+
             <!-- Slots -->
             <div class="game-category-item">
                 @if(isset($settings['icon_slots']) && $settings['icon_slots'])
@@ -206,7 +210,7 @@
                 @endif
                 <span class="category-label">SLOTS</span>
             </div>
-            
+
             <!-- Race -->
             <div class="game-category-item">
                 @if(isset($settings['icon_race']) && $settings['icon_race'])
@@ -216,7 +220,7 @@
                 @endif
                 <span class="category-label">RACE</span>
             </div>
-            
+
             <!-- Togel -->
             <div class="game-category-item">
                 @if(isset($settings['icon_togel']) && $settings['icon_togel'])
@@ -226,7 +230,7 @@
                 @endif
                 <span class="category-label">TOGEL</span>
             </div>
-            
+
             <!-- Olahraga -->
             <div class="game-category-item">
                 @if(isset($settings['icon_olahraga']) && $settings['icon_olahraga'])
@@ -236,7 +240,7 @@
                 @endif
                 <span class="category-label">OLAHRAGA</span>
             </div>
-            
+
             <!-- Crash Game -->
             <div class="game-category-item">
                 @if(isset($settings['icon_crashgame']) && $settings['icon_crashgame'])
@@ -246,7 +250,7 @@
                 @endif
                 <span class="category-label">CRASH GAME</span>
             </div>
-            
+
             <!-- Arcade -->
             <div class="game-category-item">
                 @if(isset($settings['icon_arcade']) && $settings['icon_arcade'])
@@ -256,7 +260,7 @@
                 @endif
                 <span class="category-label">ARCADE</span>
             </div>
-    
+
             <!-- Poker -->
             <div class="game-category-item">
                 @if(isset($settings['icon_poker']) && $settings['icon_poker'])
@@ -266,7 +270,7 @@
                 @endif
                 <span class="category-label">POKER</span>
             </div>
-            
+
             <!-- Esports -->
             <div class="game-category-item">
                 @if(isset($settings['icon_esports']) && $settings['icon_esports'])
@@ -276,7 +280,7 @@
                 @endif
                 <span class="category-label">ESPORTS</span>
             </div>
-            
+
             <!-- Sabung Ayam -->
             <div class="game-category-item">
                 @if(isset($settings['icon_sabung_ayam']) && $settings['icon_sabung_ayam'])
@@ -288,133 +292,81 @@
             </div>
         </div>
     </div>
-</div>
 
 <!-- Main Content -->
-<div class="container mx-auto px-4 py-6">
-    <!-- Game Popular Section -->
-    <div class="mb-8">
-        <div class="flex items-center mb-4">
-            <div class="bg-gradient-to-r from-amber-600 to-amber-500 px-4 py-2 rounded-l-md">
-                <h2 class="text-xl font-bold uppercase text-white">GAME POPULER</h2>
-            </div>
+<div class="container mx-auto px-4 py-4">
+    <!-- Header Game Populer -->
+    <div class="game-populer-header inline-block">
+        <div class="header-bg px-4 py-2">
+            <h2 class="section-title">Game Populer</h2>
         </div>
-        
-        <!-- Games Grid -->
-        <div class="overflow-x-auto custom-scrollbar pb-4">
-            <div class="grid grid-cols-2 grid-flow-col gap-3 min-w-max">
-                <?php
-                // Assuming $popularGames is already available from your existing database connection
-                if(isset($popularGames) && count($popularGames) > 0):
-                    foreach($popularGames as $game):
-                ?>
-                    <div class="game-card bg-gradient-to-b from-amber-900 to-amber-800 rounded-lg overflow-hidden shadow-lg w-36">
-                        <div class="relative">
-                            <div class="w-full h-36 overflow-hidden">
+    </div>
+
+    <!-- Panel Game Populer -->
+    <div class="popular-games-panel">
+        <button type="button" class="popular-games-nav popular-games-nav--left" aria-label="Geser game populer ke kiri">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="popular-games-track">
+            <div class="popular-games-grid">
+                <?php if(isset($popularGames) && count($popularGames) > 0): ?>
+                    <?php foreach($popularGames as $game): ?>
+                        <article class="popular-game-card">
+                            <div class="popular-game-thumb">
                                 <?php if(filter_var($game['image'], FILTER_VALIDATE_URL)): ?>
-                                    <img src="<?php echo htmlspecialchars($game['image']); ?>" 
-                                         alt="<?php echo htmlspecialchars($game['name']); ?>" 
-                                         class="w-full h-full object-cover">
+                                    <img src="<?php echo htmlspecialchars($game['image']); ?>" alt="<?php echo htmlspecialchars($game['name']); ?>" class="popular-game-image">
                                 <?php else: ?>
-                                    <img src="<?php echo asset('storage/games/' . $game['image']); ?>" 
-                                         alt="<?php echo htmlspecialchars($game['name']); ?>" 
-                                         class="w-full h-full object-cover">
+                                    <img src="<?php echo asset('storage/games/' . $game['image']); ?>" alt="<?php echo htmlspecialchars($game['name']); ?>" class="popular-game-image">
                                 <?php endif; ?>
-                                
-                                <!-- Play button overlay -->
-                                <div class="play-overlay absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-50 flex items-center justify-center transition-all duration-300">
-                                    <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center transform scale-0 hover:scale-100 transition-transform duration-300">
-                                        <i class="fas fa-play text-white ml-1 text-sm"></i>
-                                    </div>
+                                <div class="popular-game-overlay">
+                                    <span class="popular-game-cta">Main</span>
                                 </div>
                             </div>
-                            
-                            <!-- Game name -->
-                            <div class="p-2 bg-amber-800">
-                                <h3 class="text-xs font-semibold text-center text-white truncate"><?php echo htmlspecialchars($game['name']); ?></h3>
+                            <div class="popular-game-info">
+                                <h3 class="popular-game-name"><?php echo htmlspecialchars($game['name']); ?></h3>
                             </div>
-                        </div>
-                    </div>
-                <?php 
+                        </article>
+                <?php
                     endforeach;
                 else:
-                    // Default games if no data from database
                     $defaultGames = [
-                        ['name' => 'Sweet Bonan.', 'icon' => 'fa-candy-cane'],
-                        ['name' => 'Mahjong Win...', 'icon' => 'fa-dice'],
-                        ['name' => 'Sticky Bandit...', 'icon' => 'fa-hat-cowboy'],
+                        ['name' => 'Sweet Bonanza', 'icon' => 'fa-candy-cane'],
+                        ['name' => 'Mahjong Wins', 'icon' => 'fa-dice'],
+                        ['name' => 'Sticky Bandits', 'icon' => 'fa-hat-cowboy'],
                         ['name' => 'Sugai', 'icon' => 'fa-fish'],
                         ['name' => 'Mahjong Ways', 'icon' => 'fa-dice'],
-                        ['name' => 'Wukong - Bla...', 'icon' => 'fa-dragon'],
-                        ['name' => 'Bang Gacor...', 'icon' => 'fa-bomb'],
-                        ['name' => 'Forti', 'icon' => 'fa-gem']
+                        ['name' => 'Wukong Blaze', 'icon' => 'fa-dragon'],
+                        ['name' => 'Bang Gacor', 'icon' => 'fa-bomb'],
+                        ['name' => 'Fortuna', 'icon' => 'fa-gem']
                     ];
-                    
+
                     foreach($defaultGames as $game):
                 ?>
-                    <div class="game-card bg-gradient-to-b from-amber-900 to-amber-800 rounded-lg overflow-hidden shadow-lg w-36">
-                        <div class="relative">
-                            <div class="w-full h-36 overflow-hidden">
-                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-700 to-amber-600">
-                                    <i class="fas <?php echo $game['icon']; ?> text-4xl text-white opacity-80"></i>
-                                </div>
-                                
-                                <!-- Play button overlay -->
-                                <div class="play-overlay absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-50 flex items-center justify-center transition-all duration-300">
-                                    <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center transform scale-0 hover:scale-100 transition-transform duration-300">
-                                        <i class="fas fa-play text-white ml-1 text-sm"></i>
-                                    </div>
-                                </div>
+                    <article class="popular-game-card">
+                        <div class="popular-game-thumb popular-game-thumb--placeholder">
+                            <div class="popular-game-placeholder">
+                                <i class="fas <?php echo $game['icon']; ?>"></i>
                             </div>
-                            
-                            <!-- Game name -->
-                            <div class="p-2 bg-amber-800">
-                                <h3 class="text-xs font-semibold text-center text-white truncate"><?php echo $game['name']; ?></h3>
+                            <div class="popular-game-overlay">
+                                <span class="popular-game-cta">Main</span>
                             </div>
                         </div>
-                    </div>
-                <?php 
+                        <div class="popular-game-info">
+                            <h3 class="popular-game-name"><?php echo htmlspecialchars($game['name']); ?></h3>
+                        </div>
+                    </article>
+                <?php
                     endforeach;
                 endif;
                 ?>
+                </div>
             </div>
+            <button type="button" class="popular-games-nav popular-games-nav--right" aria-label="Geser game populer ke kanan">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
     </div>
 </div>
-
-<style>
-    /* Custom scrollbar for horizontal scrolling */
-    .custom-scrollbar::-webkit-scrollbar {
-        height: 6px;
-    }
-    
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: #1e293b;
-        border-radius: 3px;
-    }
-    
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #475569;
-        border-radius: 3px;
-    }
-    
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #64748b;
-    }
-    
-    /* Game card hover effect */
-    .game-card {
-        transition: all 0.3s ease;
-    }
-    
-    .game-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-    }
-</style>
-
-<!-- Main Content dengan padding untuk konten di bawah -->
-<div class="container mx-auto px-4">
 @endsection
 
 @push('scripts')
@@ -433,7 +385,7 @@
                     slide.classList.remove('active');
                     slide.style.opacity = i === index ? '1' : '0';
                 });
-                
+
                 // Update dots
                 dots.forEach((dot, i) => {
                     if (i === index) {
@@ -465,6 +417,25 @@
             }
         }
 
+        // Popular games horizontal controls
+        const popularTrack = document.querySelector('.popular-games-track');
+        const popularNavLeft = document.querySelector('.popular-games-nav--left');
+        const popularNavRight = document.querySelector('.popular-games-nav--right');
+
+        const scrollPopularGames = (direction) => {
+            if (!popularTrack) return;
+            const step = Math.max(popularTrack.clientWidth * 0.8, 220);
+            popularTrack.scrollBy({ left: direction * step, behavior: 'smooth' });
+        };
+
+        if (popularNavLeft) {
+            popularNavLeft.addEventListener('click', () => scrollPopularGames(-1));
+        }
+
+        if (popularNavRight) {
+            popularNavRight.addEventListener('click', () => scrollPopularGames(1));
+        }
+
         // Jackpot Counter Animation - mirip website asli
         function animateJackpotCounter() {
             const counter = document.getElementById('progressive_jackpot');
@@ -472,7 +443,7 @@
                 const currentValue = parseFloat(counter.textContent.replace(/\./g, ''));
                 const increment = Math.random() * 50000 + 10000; // Random increment between 10k-60k
                 const newValue = currentValue + increment;
-                
+
                 // Format with dots as thousand separators
                 counter.textContent = newValue.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             }
@@ -480,15 +451,16 @@
 
         // Update jackpot every 2 seconds
         setInterval(animateJackpotCounter, 2000);
-        
+
         // Game Categories Slider
         let gameSliderPosition = 0;
         let isDragging = false;
         let startX = 0;
         let currentX = 0;
         let initialPosition = 0;
-        let autoSlideInterval;
-        
+        const enableGameAutoSlide = false;
+        let autoSlideInterval = null;
+
         const gameSlider = document.getElementById('gameSlider');
         const gameNavLeft = document.getElementById('gameNavLeft');
         const gameNavRight = document.getElementById('gameNavRight');
@@ -497,11 +469,11 @@
         const totalItems = gameItems.length;
         const visibleItems = Math.floor(window.innerWidth / itemWidth);
         const maxPosition = -(totalItems - visibleItems) * itemWidth;
-        
+
         function updateSliderPosition() {
             gameSlider.style.transform = `translateX(${gameSliderPosition}px)`;
         }
-        
+
         function slideLeft() {
             gameSliderPosition += itemWidth;
             if (gameSliderPosition > 0) {
@@ -509,7 +481,7 @@
             }
             updateSliderPosition();
         }
-        
+
         function slideRight() {
             gameSliderPosition -= itemWidth;
             if (gameSliderPosition < maxPosition) {
@@ -517,13 +489,13 @@
             }
             updateSliderPosition();
         }
-        
+
         function autoSlideGames() {
             if (!isDragging) {
                 slideRight();
             }
         }
-        
+
         // Touch/Mouse events for manual sliding
         gameSlider.addEventListener('mousedown', (e) => {
             isDragging = true;
@@ -532,7 +504,7 @@
             gameSlider.style.cursor = 'grabbing';
             gameSlider.style.transition = 'none';
         });
-        
+
         gameSlider.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             e.preventDefault();
@@ -541,32 +513,32 @@
             gameSliderPosition = initialPosition - diff;
             updateSliderPosition();
         });
-        
+
         gameSlider.addEventListener('mouseup', () => {
             if (!isDragging) return;
             isDragging = false;
             gameSlider.style.cursor = 'grab';
             gameSlider.style.transition = 'transform 0.5s ease-in-out';
-            
+
             // Snap to nearest item
             const snapPosition = Math.round(gameSliderPosition / itemWidth) * itemWidth;
             gameSliderPosition = Math.max(maxPosition, Math.min(0, snapPosition));
             updateSliderPosition();
         });
-        
+
         gameSlider.addEventListener('mouseleave', () => {
             if (isDragging) {
                 isDragging = false;
                 gameSlider.style.cursor = 'grab';
                 gameSlider.style.transition = 'transform 0.5s ease-in-out';
-                
+
                 // Snap to nearest item
                 const snapPosition = Math.round(gameSliderPosition / itemWidth) * itemWidth;
                 gameSliderPosition = Math.max(maxPosition, Math.min(0, snapPosition));
                 updateSliderPosition();
             }
         });
-        
+
         // Touch events for mobile
         gameSlider.addEventListener('touchstart', (e) => {
             isDragging = true;
@@ -574,7 +546,7 @@
             initialPosition = gameSliderPosition;
             gameSlider.style.transition = 'none';
         });
-        
+
         gameSlider.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
             e.preventDefault();
@@ -583,45 +555,45 @@
             gameSliderPosition = initialPosition - diff;
             updateSliderPosition();
         });
-        
+
         gameSlider.addEventListener('touchend', () => {
             if (!isDragging) return;
             isDragging = false;
             gameSlider.style.transition = 'transform 0.5s ease-in-out';
-            
+
             // Snap to nearest item
             const snapPosition = Math.round(gameSliderPosition / itemWidth) * itemWidth;
             gameSliderPosition = Math.max(maxPosition, Math.min(0, snapPosition));
             updateSliderPosition();
         });
-        
+
         // Navigation arrows
         gameNavLeft.addEventListener('click', () => {
             slideLeft();
         });
-        
+
         gameNavRight.addEventListener('click', () => {
             slideRight();
         });
-        
+
         // Auto slide every 5 seconds (increased from 3)
-        if (totalItems > visibleItems) {
+        if (enableGameAutoSlide && totalItems > visibleItems) {
             autoSlideInterval = setInterval(autoSlideGames, 5000);
         }
-        
+
         // Pause auto slide on hover/touch
         gameSlider.addEventListener('mouseenter', () => {
-            if (autoSlideInterval) {
+            if (enableGameAutoSlide && autoSlideInterval) {
                 clearInterval(autoSlideInterval);
             }
         });
-        
+
         gameSlider.addEventListener('mouseleave', () => {
-            if (totalItems > visibleItems) {
+            if (enableGameAutoSlide && totalItems > visibleItems) {
                 autoSlideInterval = setInterval(autoSlideGames, 5000);
             }
         });
-        
+
         // Game Populer Slider (2 rows x 4 columns per page)
         let currentGameSlide = 0;
         const gamesGrid = document.getElementById('gamesGrid');
@@ -712,15 +684,15 @@
         margin-left: -50vw;
         position: absolute;
     }
-    
+
     .slider-item:not(.active) {
         opacity: 0;
     }
-    
+
     .slider-item.active {
         opacity: 1;
     }
-    
+
     .slider-container {
         margin: 0;
         padding: 0;
@@ -729,7 +701,7 @@
         margin-left: -50vw;
         position: relative;
     }
-    
+
     .slider-container img {
         margin: 0;
         padding: 0;
@@ -738,7 +710,7 @@
         height: 100%;
         object-fit: cover;
     }
-    
+
     /* Untuk mobile, gunakan object-position center untuk menghindari crop yang buruk */
     @media (max-width: 640px) {
         .slider-container img {
@@ -746,18 +718,18 @@
             object-position: center;
         }
     }
-    
+
     /* Untuk tablet dan desktop yang lebih besar */
     @media (min-width: 641px) {
         .slider-container img {
             object-fit: cover;
         }
     }
-    
+
     .animate-scroll {
         animation: scroll-left 20s linear infinite;
     }
-    
+
     @keyframes scroll-left {
         0% {
             transform: translateX(100%);
@@ -766,17 +738,17 @@
             transform: translateX(-100%);
         }
     }
-    
+
     /* Memastikan slider dots terlihat dengan baik */
     .slider-dot {
         backdrop-filter: blur(2px);
         transition: all 0.3s ease;
     }
-    
+
     .slider-dot:hover {
         transform: scale(1.2);
     }
-    
+
     /* Progressive Jackpot Styling - Full width layar */
     .jackpot-display-container {
         display: flex;
@@ -802,8 +774,8 @@
         background: #000000;
         border-radius: 20px;
         position: relative;
-        padding: 15px 25px;
-        min-height: 60px;
+        padding: 22px 36px;
+        min-height: 82px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -888,30 +860,60 @@
     .led-dot:nth-child(7) { animation-delay: 0.6s; }
     .led-dot:nth-child(8) { animation-delay: 0.7s; }
     .led-dot:nth-child(9) { animation-delay: 0.8s; }
+
+        .payment-methods__grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.15rem 1.35rem;
+        }
     .led-dot:nth-child(10) { animation-delay: 0.9s; }
     .led-dot:nth-child(11) { animation-delay: 1.0s; }
     .led-dot:nth-child(12) { animation-delay: 1.1s; }
+        .payment-methods {
+            margin-top: 2rem;
+        }
+
+        .payment-methods__grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem 1.2rem;
+        }
+
+        .payment-methods__item img {
+            max-height: 44px;
+        }
+
+        .payment-methods__status {
+            height: 42px;
+        }
     .led-dot:nth-child(13) { animation-delay: 1.2s; }
     .led-dot:nth-child(14) { animation-delay: 1.3s; }
     .led-dot:nth-child(15) { animation-delay: 1.4s; }
 
     .jackpot-text-display {
-        font-family: 'Open24DisplaySt', 'Arial', 'Helvetica', sans-serif;
-        font-size: 36px;
+        font-family: 'Open24DisplaySt', 'Orbitron', 'Arial', 'Helvetica', sans-serif;
+        font-size: 52px;
         font-weight: 900;
-        letter-spacing: 6px;
         text-align: center;
         z-index: 10;
         position: relative;
+        display: inline-flex;
+        align-items: baseline;
+        gap: 12px;
         text-transform: uppercase;
-        line-height: 1.2;
-        word-spacing: 8px;
+        line-height: 1.08;
+        letter-spacing: 8px;
+    }
+
+    .jackpot-text-display .idr-text,
+    .jackpot-text-display #progressive_jackpot {
+        display: inline-block;
+        line-height: 1;
     }
 
     .idr-text {
         color: #ff9600;
         font-weight: 900;
-        letter-spacing: 6px;
+        letter-spacing: 8px;
+        margin-right: 2px;
     }
 
     #progressive_jackpot {
@@ -919,40 +921,37 @@
         font-variant-numeric: tabular-nums;
         font-weight: 900;
         text-rendering: optimizeLegibility;
-        letter-spacing: 6px;
+        letter-spacing: 8px;
     }
-
-    /* Responsive design - Full width ke ujung layar dengan Upper Clock digital font */
-    @media (max-width: 640px) {
         .jackpot-display-container {
             padding: 0 4px;
         }
-        
+
         .jackpot-text-display {
-            font-size: 26px;
-            letter-spacing: 4px;
-            font-weight: 900;
-            word-spacing: 6px;
+            font-size: 36px;
+            letter-spacing: 6px;
+            gap: 10px;
         }
-        
+
         .idr-text {
-            letter-spacing: 4px;
+            letter-spacing: 6px;
+            margin-right: 2px;
         }
-        
+
         #progressive_jackpot {
-            letter-spacing: 4px;
+            letter-spacing: 6px;
         }
-        
+
         .jackpot-inner-black {
-            padding: 12px 20px;
-            min-height: 60px;
+            padding: 18px 28px;
+            min-height: 76px;
         }
-        
+
         .led-dots-top, .led-dots-bottom {
             left: 15px;
             right: 15px;
         }
-        
+
         .led-dots-left, .led-dots-right {
             top: 12px;
             bottom: 12px;
@@ -963,37 +962,37 @@
         .jackpot-display-container {
             padding: 0 2px;
         }
-        
+
         .jackpot-text-display {
-            font-size: 22px;
-            letter-spacing: 3px;
-            font-weight: 900;
-            word-spacing: 4px;
+            font-size: 32px;
+            letter-spacing: 5px;
+            gap: 8px;
         }
-        
+
         .idr-text {
-            letter-spacing: 3px;
+            letter-spacing: 5px;
+            margin-right: 2px;
         }
-        
+
         #progressive_jackpot {
-            letter-spacing: 3px;
+            letter-spacing: 5px;
         }
-        
+
         .jackpot-inner-black {
-            padding: 10px 15px;
-            min-height: 52px;
+            padding: 14px 24px;
+            min-height: 68px;
         }
-        
+
         .led-dot {
             width: 2px;
             height: 2px;
         }
-        
+
         .led-dots-top, .led-dots-bottom {
             left: 10px;
             right: 10px;
         }
-        
+
         .led-dots-left, .led-dots-right {
             top: 10px;
             bottom: 10px;
@@ -1004,25 +1003,25 @@
         .jackpot-display-container {
             padding: 0 12px;
         }
-        
+
         .jackpot-text-display {
-            font-size: 42px;
-            letter-spacing: 8px;
-            font-weight: 900;
-            word-spacing: 10px;
+            font-size: 58px;
+            letter-spacing: 10px;
+            gap: 14px;
         }
-        
+
         .idr-text {
-            letter-spacing: 8px;
+            letter-spacing: 10px;
+            margin-right: 4px;
         }
-        
+
         #progressive_jackpot {
-            letter-spacing: 8px;
+            letter-spacing: 10px;
         }
-        
+
         .jackpot-inner-black {
-            padding: 18px 30px;
-            min-height: 80px;
+            padding: 26px 42px;
+            min-height: 96px;
         }
     }
 
@@ -1030,25 +1029,25 @@
         .jackpot-display-container {
             padding: 0 16px;
         }
-        
+
         .jackpot-text-display {
-            font-size: 48px;
-            letter-spacing: 10px;
-            font-weight: 900;
-            word-spacing: 12px;
+            font-size: 68px;
+            letter-spacing: 12px;
+            gap: 16px;
         }
-        
+
         .idr-text {
-            letter-spacing: 10px;
+            letter-spacing: 12px;
+            margin-right: 4px;
         }
-        
+
         #progressive_jackpot {
-            letter-spacing: 10px;
+            letter-spacing: 12px;
         }
-        
+
         .jackpot-inner-black {
-            padding: 20px 40px;
-            min-height: 90px;
+            padding: 30px 48px;
+            min-height: 104px;
         }
     }
 
@@ -1059,16 +1058,16 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
-    
+
     /* Load Open24DisplaySt font jika tersedia */
     @font-face {
         font-family: 'Open24DisplaySt';
-        src: url('https://fonts.cdnfonts.com/css/open24-display-st') format('woff2'),
-             url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900') format('woff2');
-        font-weight: 400 900;
+        src: url('{{ asset('fonts/Open24DisplaySt.woff') }}') format('woff');
+        font-weight: normal;
+        font-style: normal;
         font-display: swap;
     }
-    
+
     /* Game Categories Slide Menu Styling */
     .game-categories-container {
         width: 100vw;
@@ -1077,13 +1076,13 @@
         position: relative;
         overflow: hidden;
     }
-    
+
     .game-categories-slider {
         padding: 12px 0;
         overflow: hidden;
         position: relative;
     }
-    
+
     .game-categories-track {
         display: flex;
         transition: transform 0.5s ease-in-out;
@@ -1091,11 +1090,11 @@
         padding: 0 20px;
         cursor: grab;
     }
-    
+
     .game-categories-track:active {
         cursor: grabbing;
     }
-    
+
     .game-category-item {
         display: flex;
         flex-direction: column;
@@ -1108,11 +1107,11 @@
         background: transparent;
         border: none;
     }
-    
+
     .game-category-item:hover {
         transform: translateY(-2px);
     }
-    
+
     .category-icon {
         width: 36px;
         height: 36px;
@@ -1120,14 +1119,14 @@
         margin-bottom: 10px;
         filter: brightness(1.1);
     }
-    
+
     .category-icon-default {
         font-size: 36px;
         color: #ffffff;
         margin-bottom: 10px;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
-    
+
     .category-label {
         font-size: 11px;
         font-weight: 700;
@@ -1141,7 +1140,7 @@
         word-wrap: break-word;
         margin-bottom: 4px;
     }
-    
+
     /* Navigation Arrows */
     .game-nav-arrow {
         position: absolute;
@@ -1161,175 +1160,159 @@
         z-index: 10;
         font-size: 16px;
     }
-    
+
     .game-nav-arrow:hover {
         background: rgba(0, 0, 0, 0.8);
         transform: translateY(-50%) scale(1.1);
     }
-    
-    .game-nav-left {
-        left: 10px;
-    }
-    
-    .game-nav-right {
-        right: 10px;
-    }
-    
-    /* Hide arrows on very small screens */
     @media (max-width: 480px) {
-        .game-nav-arrow {
-            width: 35px;
-            height: 35px;
-            font-size: 14px;
+        .payment-methods__title {
+            font-size: 0.95rem;
+            letter-spacing: 0.06em;
+            text-align: center;
         }
-        
-        .game-nav-left {
-            left: 5px;
+
+        .payment-methods__grid {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 0.7rem;
         }
-        
+
+        .payment-methods__item img {
+            width: 84px;
+            height: 32px;
+        }
+
+        .payment-methods__status {
+            height: 28px;
+        }
         .game-nav-right {
             right: 5px;
         }
     }
-    
+
     /* Responsive adjustments for game menu */
     @media (max-width: 640px) {
         .game-categories-slider {
-            padding: 10px 0;
+            padding: 1px 0;
         }
-        
+
         .game-categories-track {
             gap: 12px;
             padding: 0 16px;
         }
-        
+
         .game-category-item {
             min-width: 80px;
             padding: 10px 6px;
         }
-        
+
         .category-icon {
             width: 28px;
             height: 28px;
             margin-bottom: 8px;
         }
-        
+
         .category-icon-default {
             font-size: 28px;
             margin-bottom: 8px;
         }
-        
+
         .category-label {
             font-size: 9px;
             max-width: 70px;
             margin-bottom: 2px;
         }
     }
-    
+
     @media (min-width: 768px) {
         .game-categories-slider {
             padding: 14px 0;
         }
-        
+
         .game-categories-track {
             gap: 20px;
             padding: 0 24px;
         }
-        
+
         .game-category-item {
             min-width: 110px;
             padding: 14px 12px;
         }
-        
+
         .category-icon {
             width: 40px;
             height: 40px;
             margin-bottom: 12px;
         }
-        
+
         .category-icon-default {
             font-size: 40px;
             margin-bottom: 12px;
         }
-        
+
         .category-label {
             font-size: 12px;
             max-width: 90px;
             margin-bottom: 4px;
         }
     }
-    
+
     @media (min-width: 1024px) {
         .game-categories-slider {
             padding: 16px 0;
         }
-        
+
         .game-categories-track {
             gap: 24px;
             padding: 0 32px;
         }
-        
+
         .game-category-item {
             min-width: 120px;
             padding: 16px 14px;
         }
-        
+
         .category-icon {
             width: 44px;
             height: 44px;
             margin-bottom: 14px;
         }
-        
+
         .category-icon-default {
             font-size: 44px;
             margin-bottom: 14px;
         }
-        
+
         .category-label {
             font-size: 13px;
             max-width: 100px;
             margin-bottom: 6px;
         }
     }
-    
+
     /* Game Populer Section Styling - 100% mirip gambar */
-    .game-populer-section {
-        margin-top: 20px;
-    }
-    
     .game-populer-header {
-        position: relative;
-    }
-    
-    .header-bg {
-        background: #ff8c00;
-        padding: 8px 0;
-        position: relative;
-        clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 100%, 20px 100%);
-        box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
-    }
-    
-    .section-title {
-        color: #ffffff;
-        font-size: 18px;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin: 0;
-        padding-left: 20px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
-    
-    .games-slider-container {
-        background: #1a1a1a;
-        border: 2px solid #ff8c00;
-        border-radius: 8px;
-        padding: 15px;
-        position: relative;
-        overflow: hidden;
-        height: 350px;
-    }
-    
+    display: inline-block; /* jangan full baris */
+    margin: 0;
+}
+
+.header-bg {
+    display: inline-block;
+    background: #ff8c00;
+    padding: 7px 55px 7px 3px; /* urutan: atas kanan bawah kiri */
+    position: relative;
+    clip-path: polygon(0 0, 88% 0, 100% 100%, 0% 100%);
+}
+
+.section-title {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0;
+    line-height
+}
+
     .nav-arrow {
         position: absolute;
         top: 50%;
@@ -1346,25 +1329,25 @@
         box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
         transition: all 0.3s ease;
     }
-    
+
     .nav-arrow:hover {
         transform: translateY(-50%) scale(1.1);
         box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
     }
-    
+
     .nav-prev {
         left: -12px;
     }
-    
+
     .nav-next {
         right: -12px;
     }
-    
+
     .games-wrapper {
         overflow: hidden;
         margin: 0 10px;
     }
-    
+
     .games-grid {
         display: flex;
         transition: transform 0.5s ease-in-out;
@@ -1381,7 +1364,7 @@
         width: 100%;
         height: 320px;
     }
-    
+
     .game-item {
         background: transparent;
         border-radius: 0;
@@ -1391,18 +1374,18 @@
         border: none;
         position: relative;
     }
-    
+
     .game-item:hover {
         transform: translateY(-2px);
     }
-    
+
     .game-thumbnail {
         position: relative;
         height: 120px;
         overflow: hidden;
         border-radius: 4px;
     }
-    
+
     .game-image {
         width: 100%;
         height: 100%;
@@ -1411,11 +1394,11 @@
         background: transparent;
         transition: transform 0.3s ease;
     }
-    
+
     .game-item:hover .game-image {
         transform: scale(1.1);
     }
-    
+
     .demo-game-bg {
         width: 100%;
         height: 100%;
@@ -1424,13 +1407,13 @@
         justify-content: center;
         position: relative;
     }
-    
+
     .game-icon {
         font-size: 40px;
         color: rgba(255, 255, 255, 0.9);
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
-    
+
     .game-overlay {
         position: absolute;
         top: 0;
@@ -1444,17 +1427,17 @@
         opacity: 0;
         transition: opacity 0.3s ease;
     }
-    
+
     .game-item:hover .game-overlay {
         opacity: 1;
     }
-    
+
     .game-overlay i {
         color: #ff8c00;
         font-size: 24px;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     }
-    
+
     .game-name {
         padding: 6px 4px;
         color: #ffffff;
@@ -1474,7 +1457,7 @@
         align-items: center;
         justify-content: center;
     }
-    
+
     /* Responsive Design untuk Game Populer */
     @media (max-width: 768px) {
         .games-slider-container { height: 380px; }
@@ -1489,7 +1472,7 @@
         .game-name { height: 28px; font-size: 9px; padding: 4px 2px; }
         .nav-arrow { width: 30px; height: 30px; font-size: 12px; }
     }
-    
+
     @media (max-width: 480px) {
         .games-slider-container { padding: 12px; margin: 0 5px; height: 360px; }
         .games-grid { height: 330px; }
@@ -1499,6 +1482,416 @@
         .nav-arrow { width: 25px; height: 25px; font-size: 10px; }
         .nav-prev { left: -8px; }
         .nav-next { right: -8px; }
+    }
+
+    /* Popular Games Section Styling - Full Width */
+    .popular-games-heading {
+        display: flex;
+        align-items: center;
+    }
+
+    .popular-games-heading__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1.8rem;
+        border-radius: 9999px;
+        background: linear-gradient(135deg, #ff7a18 0%, #ffae35 100%);
+        color: #0f172a;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-weight: 800;
+        box-shadow: 0 18px 35px rgba(255, 122, 24, 0.45);
+    }
+
+    .popular-games-panel {
+    position: relative;
+    padding: 12px 18px 18px;
+    background: transparent;
+    border: 3px solid rgba(255, 155, 55, 0.4);
+    border-radius: 0;       /* 🚀 bikin kotak lurus */
+    box-shadow: none;
+    overflow: hidden;
+    backdrop-filter: none;
+    margin-top: 0;          /* 🚀 hilangkan jarak dari header */
+}
+
+    .popular-games-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 42px;
+        height: 42px;
+        border-radius: 9999px;
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.2s ease, color 0.2s ease;
+        box-shadow: none;
+        z-index: 2;
+    }
+
+    .popular-games-nav:hover {
+        transform: translateY(-50%) scale(1.06);
+        color: #facc15;
+    }
+
+    .popular-games-nav i {
+        font-size: 1.05rem;
+    }
+
+    .popular-games-nav--left {
+        left: 4px;
+    }
+
+    .popular-games-nav--right {
+        right: 4px;
+    }
+
+    .popular-games-panel::after {
+        content: none;
+    }
+
+    .popular-games-track {
+        overflow-x: auto;
+        padding: 0 16px 18px;
+        mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    }
+
+    .popular-games-grid {
+        position: relative;
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        grid-auto-columns: 140px;
+        column-gap: 1.5rem;
+        row-gap: 1.5rem;
+        z-index: 1;
+    }
+
+    .popular-game-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        width: 140px;
+        padding: 0.85rem;
+        background: transparent;
+        overflow: hidden;
+        transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        box-shadow: none;
+    }
+
+    .popular-game-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(255, 195, 95, 0.75);
+        box-shadow: 0 26px 48px rgba(255, 140, 0, 0.25);
+    }
+
+    .popular-game-thumb {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        background: rgba(20, 20, 20, 0.88);
+        border: 1px solid rgba(255, 170, 0, 0.22);
+        box-shadow: inset 0 0 0 1px rgba(255, 190, 100, 0.18);
+    }
+
+    .popular-game-thumb--placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .popular-game-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        font-size: 2.1rem;
+        color: rgba(255, 255, 255, 0.82);
+    }
+
+    .popular-game-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .popular-game-card:hover .popular-game-image {
+        transform: scale(1.08);
+    }
+
+    .popular-game-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.78) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .popular-game-card:hover .popular-game-overlay {
+        opacity: 1;
+    }
+
+    .popular-game-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1.3rem;
+        border-radius: 9999px;
+        background: linear-gradient(120deg, #f97316 0%, #facc15 100%);
+        color: #0f172a;
+        font-size: 0.65rem;
+        font-weight: 800;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        box-shadow: 0 12px 22px rgba(249, 115, 22, 0.45);
+    }
+
+    .popular-game-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        gap: 0.4rem;
+        text-align: center;
+    }
+
+    .popular-game-name {
+        margin: 0;
+        color: #ff8c00;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .popular-games-track::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .popular-games-track::-webkit-scrollbar-track {
+        background: rgba(15, 15, 15, 0.4);
+        border-radius: 9999px;
+    }
+
+    .popular-games-track::-webkit-scrollbar-thumb {
+        background: rgba(249, 115, 22, 0.6);
+        border-radius: 9999px;
+    }
+
+    .payment-methods {
+        margin-top: 2.5rem;
+    }
+
+    .payment-methods__title {
+        margin: 0 0 1.1rem;
+        color: #f8fafc;
+        font-family: Arial, sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .payment-methods__grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        column-gap: 0.75rem;
+        row-gap: 0.65rem;
+        justify-items: center;
+    }
+
+    .payment-methods__item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+    }
+
+    .payment-methods__item img {
+        width: 112px;
+        height: 42px;
+        object-fit: contain;
+        filter: none;
+    }
+
+    .payment-methods__status {
+        width: 4px;
+        min-width: 4px;
+        height: 38px;
+        border-radius: 9999px;
+        background: #475569;
+    }
+
+    .payment-methods__status--online {
+        background: #22c55e;
+    }
+
+    .payment-methods__status--offline {
+        background: #ef4444;
+    }
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    @media (max-width: 1024px) {
+        .popular-games-panel {
+            padding: 7px 1px 7px;
+        }
+
+        .popular-games-grid {
+            grid-auto-columns: 128px;
+            column-gap: 1.3rem;
+            row-gap: 1.3rem;
+        }
+
+        .popular-game-card {
+            width: 128px;
+            padding: 0.75rem;
+            border-radius: 17px;
+        }
+
+        .payment-methods__grid {
+            column-gap: 0.6rem;
+            row-gap: 0.5rem;
+        }
+
+        .payment-methods__item img {
+            width: 100px;
+            height: 38px;
+        }
+
+        .payment-methods__status {
+            height: 32px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .popular-games-panel {
+            padding: 7px 1px 7px;
+        }
+
+        .popular-games-nav {
+            width: 34px;
+            height: 34px;
+        }
+
+        .popular-games-grid {
+            grid-auto-columns: 118px;
+            column-gap: 1.15rem;
+            row-gap: 1.15rem;
+        }
+
+        .popular-game-card {
+            width: 118px;
+            padding: 0.7rem;
+            border-radius: 16px;
+        }
+
+        .popular-game-name {
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+        }
+
+        .payment-methods__grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            column-gap: 0.5rem;
+            row-gap: 0.45rem;
+        }
+
+        .payment-methods__item img {
+            width: 92px;
+            height: 34px;
+        }
+
+        .payment-methods__status {
+            height: 28px;
+        }
+
+    @media (max-width: 480px) {
+
+        .payment-methods__title {
+            font-size: 1.1rem;
+            letter-spacing: 0.08em;
+            text-align: center;
+        }
+
+        .payment-methods__grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            column-gap: 0.45rem;
+            row-gap: 0.4rem;
+        }
+
+        .payment-methods__item img {
+            width: 78px;
+            height: 30px;
+        }
+
+        .payment-methods__status {
+            height: 24px;
+        }
+        .popular-games-panel {
+            padding: 7px 1px 7px;
+        }
+
+        .popular-games-nav {
+            width: 30px;
+            height: 30px;
+        }
+
+        .popular-games-grid {
+            grid-auto-columns: 108px;
+            column-gap: 0.1rem;
+            row-gap: 1rem;
+        }
+
+        .popular-game-card {
+            width: 108px;
+            padding: 0.65rem;
+            border-radius: 14px;
+        }
+
+        .popular-game-name {
+            font-size: 0.68rem;
+            letter-spacing: 0.07em;
+        }
+
+        .popular-game-cta {
+            padding: 0.45rem 1.1rem;
+            letter-spacing: 0.2em;
+        }
+
+        .popular-games-heading__badge {
+            padding: 0.3rem 1.2rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.16em;
+        }
     }
 </style>
 @endpush

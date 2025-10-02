@@ -11,11 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_admin')->default(false)->after('password');
-            $table->timestamp('last_login_at')->nullable()->after('is_admin');
-            $table->string('last_login_ip')->nullable()->after('last_login_at');
-        });
+        // Kolom sudah ada di migrasi awal, tidak perlu ditambah lagi
     }
 
     /**
@@ -23,8 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['is_admin', 'last_login_at', 'last_login_ip']);
-        });
+        // Tidak perlu drop kolom, karena migrasi ini tidak menambah kolom
     }
 };

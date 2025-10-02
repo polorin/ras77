@@ -6,6 +6,9 @@
     <title>Dashboard Admin - Panel Kontrol</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    @if(!empty($settings['favicon']))
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('storage/favicons/' . $settings['favicon']) }}">
+    @endif
     <style>
         /* Custom scrollbar untuk sidebar */
         .sidebar-scroll::-webkit-scrollbar {
