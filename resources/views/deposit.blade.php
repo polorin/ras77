@@ -8,11 +8,11 @@
     <div class="deposit-tabs">
         <button class="tab-button active" data-tab="deposit">
             <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/withdrawal.svg?v=20250528" alt="Deposit" class="tab-icon">
-            <span>DEPOSIT</span>
+            <span class="tab-text">DEPOSIT</span>
         </button>
         <button class="tab-button" data-tab="withdrawal">
             <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/withdrawal.svg?v=20250528" alt="Penarikan" class="tab-icon">
-            <span>PENARIKAN</span>
+            <span class="tab-text">PENARIKAN</span>
         </button>
     </div>
 
@@ -79,10 +79,11 @@
                     </div>
                 </div>
                 <div class="amount-input-container">
+                    <span class="input-prefix">IDR</span>
                     <input type="text" 
                            class="amount-input" 
-                           placeholder="IDR" 
-                           value="2,333.000-"
+                           placeholder="0" 
+                           value="0"
                            id="depositAmount">
                 </div>
                 <div class="amount-limits">
@@ -97,7 +98,7 @@
                     <span class="form-label">Jumlah yang ditransfer</span>
                     <div class="transfer-amount-display">
                         <span class="transfer-amount-label">IDR</span>
-                        <span class="transfer-amount-value">2.333.000</span>
+                        <span class="transfer-amount-value" id="transferAmountValue">0</span>
                         <button class="transfer-toggle-btn">
                             <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
                                 <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -113,13 +114,15 @@
                     </div>
                     <div class="transfer-detail-row">
                         <span class="detail-label">Jumlah yang ditransfer</span>
+                        <span class="detail-value" id="detailTransferAmount">IDR 0</span>
                     </div>
                     <div class="transfer-detail-row">
                         <span class="detail-label">Biaya Admin</span>
+                        <span class="detail-value">Rp 0</span>
                     </div>
                     <div class="transfer-detail-row">
                         <span class="detail-label">Jumlah yang didapat</span>
-                        <span class="detail-value">IDR 2.333.000</span>
+                        <span class="detail-value" id="detailReceivedAmount">IDR 0</span>
                     </div>
                 </div>
             </div>
@@ -161,10 +164,10 @@
 .tab-button {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     padding: 14px 16px;
     background: #000;
     border: none;
@@ -188,13 +191,17 @@
 }
 
 .tab-icon {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     filter: brightness(0.7);
 }
 
 .tab-button.active .tab-icon {
     filter: brightness(0) invert(0);
+}
+
+.tab-text {
+    white-space: nowrap;
 }
 
 /* Tab Content */
@@ -331,10 +338,18 @@
     position: relative;
     display: flex;
     align-items: center;
+    gap: 8px;
     background: #2d2d2d;
     border: 1px solid #3a3a3a;
     border-radius: 6px;
-    padding: 12px 16px;
+    padding: 10px 16px;
+}
+
+.input-prefix {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .amount-input {
@@ -345,6 +360,7 @@
     font-size: 14px;
     font-weight: 600;
     outline: none;
+    min-width: 0;
 }
 
 .amount-input::placeholder {
@@ -642,23 +658,44 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Amount input formatting
+    // Amount input formatting and transfer amount update
     const amountInput = document.getElementById('depositAmount');
+    const transferAmountValue = document.getElementById('transferAmountValue');
+    const detailTransferAmount = document.getElementById('detailTransferAmount');
+    const detailReceivedAmount = document.getElementById('detailReceivedAmount');
+    
+    function updateTransferAmounts(amount) {
+        const numAmount = parseFloat(amount) || 0;
+        const formattedAmount = numAmount.toLocaleString('id-ID');
+        
+        // Update all display elements
+        if (transferAmountValue) {
+            transferAmountValue.textContent = formattedAmount;
+        }
+        if (detailTransferAmount) {
+            detailTransferAmount.textContent = 'IDR ' + formattedAmount;
+        }
+        if (detailReceivedAmount) {
+            detailReceivedAmount.textContent = 'IDR ' + formattedAmount;
+        }
+    }
     
     amountInput.addEventListener('focus', function() {
-        if (this.value === '0.00') {
+        if (this.value === '0' || this.value === '0.00') {
             this.value = '';
         }
     });
 
     amountInput.addEventListener('blur', function() {
         if (this.value === '' || this.value === '0') {
-            this.value = '0.00';
+            this.value = '0';
+            updateTransferAmounts(0);
         } else {
-            // Format as number with 2 decimals
-            const num = parseFloat(this.value.replace(/,/g, ''));
+            // Keep as entered, just remove invalid chars
+            const num = parseFloat(this.value.replace(/[^\d.]/g, ''));
             if (!isNaN(num)) {
-                this.value = num.toFixed(2);
+                this.value = num.toString();
+                updateTransferAmounts(num);
             }
         }
     });
@@ -672,6 +709,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (parts.length > 2) {
             this.value = parts[0] + '.' + parts.slice(1).join('');
         }
+        
+        // Update transfer amounts in real-time
+        const num = parseFloat(this.value) || 0;
+        updateTransferAmounts(num);
     });
 
     // Form submission
