@@ -119,15 +119,15 @@
                         </div>
 
                         <div class="flex rounded-lg border border-gray-700 overflow-hidden" style="background-color: #1f1f1f;">
-                            <button type="button" class="flex-1 px-3 py-3 text-center text-xs font-semibold text-white hover:bg-white/10 transition space-y-2" style="background-color: #1f1f1f;">
+                            <a href="{{ route('deposit') }}" class="flex-1 px-3 py-3 text-center text-xs font-semibold text-white hover:bg-white/10 transition space-y-2" style="background-color: #1f1f1f;">
                                 <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/withdrawal.svg?v=20250528" alt="Deposit" class="mx-auto h-6 w-6">
                                 <span class="block">Deposit</span>
-                            </button>
+                            </a>
                             <span class="w-px bg-gray-600"></span>
-                            <button type="button" class="flex-1 px-3 py-3 text-center text-xs font-semibold text-white hover:bg-white/10 transition space-y-2" style="background-color: #1f1f1f;">
+                            <a href="{{ route('deposit') }}" class="flex-1 px-3 py-3 text-center text-xs font-semibold text-white hover:bg-white/10 transition space-y-2" style="background-color: #1f1f1f;">
                                 <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/withdrawal.svg?v=20250528" alt="Penarikan" class="mx-auto h-6 w-6">
                                 <span class="block">Penarikan</span>
-                            </button>
+                            </a>
                             <span class="w-px bg-gray-600"></span>
                             <button type="button" class="flex-1 px-3 py-3 text-center text-xs font-semibold text-white hover:bg-white/10 transition space-y-2" style="background-color: #1f1f1f;">
                                 <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/redemption-store.svg?v=20250528" alt="Penukaran" class="mx-auto h-6 w-6">

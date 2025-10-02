@@ -105,6 +105,15 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the deposit page.
+     */
+    public function deposit()
+    {
+        $settings = $this->getSettings();
+        return view('deposit', compact('settings'));
+    }
+
+    /**
      * Display member home page after login.
      */
     public function memberHome()

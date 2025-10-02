@@ -60,8 +60,8 @@
 
         @auth
             <!-- Depo/Wd untuk user login -->
-            <a href="#"
-               class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-yellow-400 transition-colors">
+            <a href="{{ route('deposit') }}"
+               class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-yellow-400 transition-colors {{ request()->routeIs('deposit') ? 'text-yellow-400' : '' }}">
                 <span class="w-8 h-8 mb-1 rounded-full bg-orange-500 flex items-center justify-center text-black">
                     <i class="fas fa-dollar-sign text-sm"></i>
                 </span>

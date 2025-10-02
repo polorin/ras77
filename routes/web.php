@@ -16,6 +16,7 @@ Route::get('/login', [HomeController::class, 'login'])->middleware('guest')->nam
 Route::get('/register', [HomeController::class, 'register'])->middleware('guest')->name('register');
 Route::get('/hubungi', [HomeController::class, 'hubungi'])->name('hubungi');
 Route::get('/akun', [HomeController::class, 'akun'])->middleware('auth')->name('akun');
+Route::get('/deposit', [HomeController::class, 'deposit'])->middleware('auth')->name('deposit');
 Route::middleware(['auth', 'prevent-back-history'])->get('/member/home', [HomeController::class, 'memberHome'])->name('member.home');
 Route::post('/register', [MemberAuthController::class, 'register'])->middleware('guest')->name('register.submit');
 Route::post('/login', [MemberAuthController::class, 'login'])->middleware('guest')->name('login.submit');
