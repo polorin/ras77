@@ -154,6 +154,77 @@
                 </div>
             </div>
         </div>
+
+        <!-- Detail Perbaikan Section -->
+        <div class="detail-perbaikan-section">
+            <div class="detail-header">
+                <span>DETAIL PERBARIKAN</span>
+                <button class="edit-btn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="bank-card">
+                <div class="bank-card-header">
+                    <span class="account-label">{{ Auth::user()->account_holder_name ?? 'mj' }}</span>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" 
+                         alt="BCA" class="bank-logo">
+                </div>
+                <div class="account-number">{{ Auth::user()->account_number ?? '1299929912' }}</div>
+                <div class="bank-name">{{ Auth::user()->payment_provider ?? 'BCA' }}</div>
+            </div>
+        </div>
+
+        <!-- Referral Section -->
+        <div class="referral-section">
+            <div class="referral-header">REFERRAL</div>
+            <div class="referral-content">
+                <div class="referral-label">KODE REFERRAL:</div>
+                <div class="referral-code">
+                    @if(Auth::user()->id)
+                        {{ 'REF' . str_pad(Auth::user()->id, 6, '0', STR_PAD_LEFT) }}
+                    @else
+                        ······
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Deposit/Penarikan Section -->
+        <div class="status-section">
+            <div class="status-header">STATUS DEPOSIT / PENARIKAN</div>
+            
+            <!-- Status Deposit Terakhir -->
+            <div class="status-subsection">
+                <div class="status-subtitle">STATUS DEPOSIT TERAKHIR</div>
+                <div class="status-table">
+                    <div class="table-header">
+                        <div class="th">Jumlah</div>
+                        <div class="th">Tanggal/Waktu WIB</div>
+                        <div class="th">Status</div>
+                    </div>
+                    <div class="table-body">
+                        <div class="empty-state">Tidak ada data</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Penarikan Terakhir -->
+            <div class="status-subsection">
+                <div class="status-subtitle">STATUS PENARIKAN TERAKHIR</div>
+                <div class="status-table">
+                    <div class="table-header">
+                        <div class="th">Jumlah</div>
+                        <div class="th">Tanggal/Waktu WIB</div>
+                        <div class="th">Status</div>
+                    </div>
+                    <div class="table-body">
+                        <div class="empty-state">Tidak ada data</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -547,6 +618,181 @@
     width: 16px;
     height: 16px;
     flex-shrink: 0;
+}
+
+/* Detail Perbaikan Section */
+.detail-perbaikan-section {
+    margin: 16px;
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #2d2d2d;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.edit-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.bank-card {
+    background: linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%);
+    padding: 16px;
+    border-radius: 0 0 6px 6px;
+}
+
+.bank-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.account-label {
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.bank-logo {
+    height: 24px;
+    width: auto;
+}
+
+.account-number {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.bank-name {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Referral Section */
+.referral-section {
+    margin: 0 16px 16px;
+}
+
+.referral-header {
+    background: #ff9500;
+    color: #000;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 16px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.referral-content {
+    background: #2d2d2d;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.referral-label {
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.referral-code {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+/* Status Section */
+.status-section {
+    margin: 0 16px 16px;
+}
+
+.status-header {
+    background: #ff9500;
+    color: #000;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 16px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.status-subsection {
+    background: #2d2d2d;
+    padding: 16px;
+    margin-bottom: 0;
+}
+
+.status-subsection:last-child {
+    border-top: 1px solid #1a1a1a;
+}
+
+.status-subtitle {
+    color: #ff9500;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.status-table {
+    background: #1a1a1a;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    background: #2d2d2d;
+    padding: 10px 12px;
+    gap: 8px;
+}
+
+.th {
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.3px;
+}
+
+.table-body {
+    padding: 20px 12px;
+}
+
+.empty-state {
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+    font-style: italic;
 }
 
 /* Desktop adjustments */
