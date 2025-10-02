@@ -78,28 +78,23 @@
         <!-- Account Tabs -->
         <div class="account-tabs">
             <button class="tab-item active">
-                <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                </svg>
+                <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/profile-active.svg?v=20250528" 
+                     alt="Akun Saya" class="tab-icon">
                 <span class="tab-label">AKUN SAYA</span>
             </button>
             <button class="tab-item">
-                <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                </svg>
+                <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/password-active.svg?v=20250528" 
+                     alt="Ubah Kata Sandi" class="tab-icon">
                 <span class="tab-label">UBAH KATA SANDI</span>
             </button>
             <button class="tab-item">
-                <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
-                </svg>
+                <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/edit-active.svg?v=20250528" 
+                     alt="Profil Saya" class="tab-icon">
                 <span class="tab-label">PROFIL SAYA</span>
             </button>
             <button class="tab-item">
-                <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
-                </svg>
+                <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/redemption-history-active.svg?v=20250528" 
+                     alt="Riwayat Penukaran" class="tab-icon">
                 <span class="tab-label">RIWAYAT PENUKARAN</span>
             </button>
         </div>
