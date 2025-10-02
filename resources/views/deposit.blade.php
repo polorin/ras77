@@ -65,42 +65,63 @@
         <div class="deposit-form-section">
             <!-- Jumlah -->
             <div class="form-group">
-                <label class="form-label">
-                    Jumlah <span class="required">*</span>
-                </label>
-                <div class="amount-input-container">
-                    <input type="text" 
-                           class="amount-input" 
-                           placeholder="IDR" 
-                           value="0.00"
-                           id="depositAmount">
-                    <div class="qris-logo-container">
+                <div class="label-with-logo">
+                    <label class="form-label">
+                        Jumlah <span class="required">*</span>
+                    </label>
+                    <div class="qris-logo-label">
                         <img src="https://dsuown9evwz4y.cloudfront.net/Images/banks/qris.svg?v=20250528" alt="QRIS" class="qris-logo">
-                        <button class="toggle-btn">
+                        <button class="toggle-btn-label">
                             <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
                                 <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
                     </div>
                 </div>
+                <div class="amount-input-container">
+                    <input type="text" 
+                           class="amount-input" 
+                           placeholder="IDR" 
+                           value="2,333.000-"
+                           id="depositAmount">
+                </div>
                 <div class="amount-limits">
-                    <span>Min: 25,000.00</span>
+                    <span>Min: 20,000.00</span>
                     <span>Max: 10,000,000.00</span>
                 </div>
             </div>
 
             <!-- Jumlah yang ditransfer -->
             <div class="form-group">
-                <label class="form-label">Jumlah yang ditransfer</label>
-                <select class="form-select">
-                    <option value="">IDR 0</option>
-                    <option value="25000">IDR 25,000</option>
-                    <option value="50000">IDR 50,000</option>
-                    <option value="100000">IDR 100,000</option>
-                    <option value="200000">IDR 200,000</option>
-                    <option value="500000">IDR 500,000</option>
-                    <option value="1000000">IDR 1,000,000</option>
-                </select>
+                <div class="transfer-section-header">
+                    <span class="form-label">Jumlah yang ditransfer</span>
+                    <div class="transfer-amount-display">
+                        <span class="transfer-amount-label">IDR</span>
+                        <span class="transfer-amount-value">2.333.000</span>
+                        <button class="transfer-toggle-btn">
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Transfer Details Dropdown (Hidden by default) -->
+                <div class="transfer-details" id="transferDetails" style="display: none;">
+                    <div class="transfer-detail-row">
+                        <span class="detail-label">Riwayat Deposit</span>
+                    </div>
+                    <div class="transfer-detail-row">
+                        <span class="detail-label">Jumlah yang ditransfer</span>
+                    </div>
+                    <div class="transfer-detail-row">
+                        <span class="detail-label">Biaya Admin</span>
+                    </div>
+                    <div class="transfer-detail-row">
+                        <span class="detail-label">Jumlah yang didapat</span>
+                        <span class="detail-value">IDR 2.333.000</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Submit Button -->
@@ -238,6 +259,9 @@
     width: 32px;
     height: 32px;
     object-fit: contain;
+    background: #c0c0c0;
+    padding: 6px;
+    border-radius: 6px;
 }
 
 .payment-method-btn span {
@@ -356,6 +380,41 @@
     color: #22c55e;
 }
 
+/* Label with Logo */
+.label-with-logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.qris-logo-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qris-logo {
+    width: 40px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.toggle-btn-label {
+    background: transparent;
+    border: none;
+    color: #4ade80;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-btn-label:hover {
+    color: #22c55e;
+}
+
 .amount-limits {
     display: flex;
     justify-content: space-between;
@@ -364,31 +423,85 @@
     color: #999;
 }
 
-.form-select {
-    width: 100%;
+/* Transfer Section */
+.transfer-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 12px 16px;
     background: #2d2d2d;
     border: 1px solid #3a3a3a;
     border-radius: 6px;
-    color: #ff9500;
-    font-size: 14px;
-    font-weight: 600;
     cursor: pointer;
-    outline: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    padding-right: 40px;
 }
 
-.form-select:hover {
+.transfer-section-header:hover {
     border-color: #4a4a4a;
 }
 
-.form-select option {
-    background: #2d2d2d;
+.transfer-amount-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.transfer-amount-label {
     color: white;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.transfer-amount-value {
+    color: #ff9500;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.transfer-toggle-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transfer-toggle-btn:hover {
+    color: #ff9500;
+}
+
+.transfer-details {
+    margin-top: 8px;
+    background: #2d2d2d;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    padding: 8px 0;
+}
+
+.transfer-detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.transfer-detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.detail-value {
+    color: #ff9500;
+    font-size: 13px;
+    font-weight: 700;
 }
 
 /* Submit Button */
@@ -509,6 +622,25 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Selected payment method:', methodName);
         });
     });
+
+    // Transfer details toggle
+    const transferHeader = document.querySelector('.transfer-section-header');
+    const transferDetails = document.getElementById('transferDetails');
+    const transferToggleBtn = document.querySelector('.transfer-toggle-btn');
+
+    if (transferHeader && transferDetails && transferToggleBtn) {
+        transferHeader.addEventListener('click', function() {
+            const isHidden = transferDetails.style.display === 'none';
+            
+            if (isHidden) {
+                transferDetails.style.display = 'block';
+                transferToggleBtn.style.transform = 'rotate(180deg)';
+            } else {
+                transferDetails.style.display = 'none';
+                transferToggleBtn.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
 
     // Amount input formatting
     const amountInput = document.getElementById('depositAmount');
