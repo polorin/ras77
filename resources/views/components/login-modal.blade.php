@@ -14,7 +14,7 @@
 
                 </div>
 
-                <form class="space-y-4" method="POST" action="{{ route('login.submit') }}">
+                <form id="loginForm" class="space-y-4" method="POST" action="{{ route('login.submit') }}">
                     @csrf
                     <div class="space-y-1.5">
                         <label for="loginUsername" class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-300">Nama Pengguna</label>
@@ -29,6 +29,7 @@
                         @error('username', 'login')
                             <p class="text-xs text-red-300">{{ $message }}</p>
                         @enderror
+                        <p id="usernameError" class="text-xs text-red-300 hidden"></p>
                     </div>
 
                         <div class="space-y-1.5">
@@ -44,6 +45,10 @@
                         <button type="button" class="ml-auto block text-xs font-semibold text-[rgb(215,127,3)] hover:text-yellow-300 focus:outline-none">
                             Lupa sandi?
                         </button>
+                        @error('password', 'login')
+                            <p class="text-xs text-red-300">{{ $message }}</p>
+                        @enderror
+                        <p id="passwordError" class="text-xs text-red-300 hidden"></p>
                     </div>
 
                     <button type="submit" class="w-full rounded-xl bg-[rgb(215,127,3)] px-4 py-3 text-sm font-bold uppercase tracking-[0.25em] text-white shadow-lg shadow-yellow-400/30 transition hover:bg-yellow-300">
@@ -116,6 +121,50 @@
                 const hasLoginErrors = @json($errors->login->any());
                 if (hasLoginErrors && !window.DISABLE_LOGIN_MODAL_AUTO_OPEN) {
                     openModal();
+                }
+
+                // Form validation
+                const loginForm = document.getElementById('loginForm');
+                const usernameInput = document.getElementById('loginUsername');
+                const passwordInput = document.getElementById('loginPassword');
+                const usernameError = document.getElementById('usernameError');
+                const passwordError = document.getElementById('passwordError');
+
+                if (loginForm) {
+                    loginForm.addEventListener('submit', function(event) {
+                        // Reset error messages
+                        usernameError.classList.add('hidden');
+                        passwordError.classList.add('hidden');
+                        usernameError.textContent = '';
+                        passwordError.textContent = '';
+
+                        let hasError = false;
+
+                        // Validate username
+                        if (!usernameInput.value.trim()) {
+                            usernameError.textContent = 'Silakan masukkan nama pengguna';
+                            usernameError.classList.remove('hidden');
+                            hasError = true;
+                        }
+
+                        // Validate password
+                        if (!passwordInput.value.trim()) {
+                            passwordError.textContent = 'Silakan masukkan kata sandi';
+                            passwordError.classList.remove('hidden');
+                            hasError = true;
+                        }
+
+                        // Prevent form submission if there are errors
+                        if (hasError) {
+                            event.preventDefault();
+                            // Focus on first empty field
+                            if (!usernameInput.value.trim()) {
+                                usernameInput.focus();
+                            } else if (!passwordInput.value.trim()) {
+                                passwordInput.focus();
+                            }
+                        }
+                    });
                 }
             });
         </script>
