@@ -159,17 +159,11 @@
                     <select class="account-select" id="sourceAccount">
                         <option value="">Pilih Akun Asal</option>
                         @if(Auth::check())
-                            @php
-                                // Get user's registered bank accounts
-                                $user = Auth::user();
-                                // For now, displaying primary account from registration
-                                // In future, this can fetch from a separate user_bank_accounts table
-                            @endphp
-                            @if($user->provider && $user->account_number)
-                                <option value="{{ strtolower($user->provider) }}-{{ $user->account_number }}" selected>
-                                    {{ $user->provider }} - {{ $user->account_number }}
+                            @foreach(Auth::user()->activeBankAccounts as $account)
+                                <option value="{{ $account->id }}" {{ $account->is_primary ? 'selected' : '' }}>
+                                    {{ $account->provider }} - {{ $account->account_number }}
                                 </option>
-                            @endif
+                            @endforeach
                         @endif
                     </select>
                     <button class="add-account-btn" type="button" id="showBankAccountsBtn">
@@ -291,27 +285,47 @@
             <div class="modal-body">
                 <!-- List of User's Bank Accounts -->
                 <div class="bank-accounts-list" id="bankAccountsList">
-                    @if(Auth::check() && Auth::user()->provider && Auth::user()->account_number)
+                    @if(Auth::check())
                         @php
                             $user = Auth::user();
+                            $bankAccounts = $user->bankAccounts()->orderBy('is_primary', 'desc')->orderBy('created_at', 'desc')->get();
                         @endphp
-                        <div class="bank-account-item">
-                            <div class="account-radio">
-                                <input type="radio" name="selected_account" value="{{ strtolower($user->provider) }}-{{ $user->account_number }}" id="account_primary" checked>
-                            </div>
-                            <div class="account-info">
-                                <div class="bank-logo-container">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="{{ $user->provider }}" class="account-bank-logo">
+                        
+                        @if($bankAccounts->count() > 0)
+                            @foreach($bankAccounts as $index => $account)
+                                <div class="bank-account-item">
+                                    <div class="account-radio">
+                                        <input type="radio" name="selected_account" value="{{ $account->id }}" id="account_{{ $account->id }}" {{ $account->is_primary ? 'checked' : '' }}>
+                                    </div>
+                                    <div class="account-info">
+                                        <div class="bank-logo-container">
+                                            @php
+                                                $bankLogos = [
+                                                    'Bank Central Asia (BCA)' => 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg',
+                                                    'Bank Mandiri' => 'https://upload.wikimedia.org/wikipedia/id/a/ad/Bank_Mandiri_logo_2016.svg',
+                                                    'Bank Negara Indonesia (BNI)' => 'https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg',
+                                                    'Bank Rakyat Indonesia (BRI)' => 'https://upload.wikimedia.org/wikipedia/id/2/2e/BRI_2020.svg',
+                                                ];
+                                                $logoUrl = $bankLogos[$account->provider] ?? 'https://via.placeholder.com/48x48?text=Bank';
+                                            @endphp
+                                            <img src="{{ $logoUrl }}" alt="{{ $account->provider }}" class="account-bank-logo">
+                                        </div>
+                                        <div class="account-details">
+                                            <div class="account-bank-number">{{ $account->provider }} | {{ $account->account_number }}</div>
+                                            <div class="account-holder">{{ $account->account_holder_name }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="account-status">
+                                        <span class="status-indicator {{ $account->is_primary ? 'active' : '' }}"></span>
+                                    </div>
                                 </div>
-                                <div class="account-details">
-                                    <div class="account-bank-number">{{ $user->provider }} | {{ $user->account_number }}</div>
-                                    <div class="account-holder">{{ $user->full_name ?? $user->name }}</div>
-                                </div>
+                            @endforeach
+                        @else
+                            <div style="text-align: center; padding: 20px; color: #999;">
+                                <p>Belum ada akun bank terdaftar</p>
+                                <p style="font-size: 12px; margin-top: 8px;">Silakan tambahkan akun bank Anda</p>
                             </div>
-                            <div class="account-status">
-                                <span class="status-indicator active"></span>
-                            </div>
-                        </div>
+                        @endif
                     @endif
                 </div>
 
@@ -1710,29 +1724,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Here you would normally send this data to the server
-            // For now, we'll just add it to the list and update the dropdown
-            console.log('Adding new account:', {
-                provider: bankProvider,
-                accountNumber: accountNumber,
-                fullName: fullName
+            // Send to server via AJAX
+            fetch('{{ route("bank-accounts.store") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    provider: bankProvider,
+                    account_number: accountNumber,
+                    account_holder_name: fullName,
+                    is_primary: false
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Akun berhasil ditambahkan!');
+                    
+                    // Reset form
+                    addAccountForm.reset();
+                    document.getElementById('fullNameInput').value = fullName;
+                    
+                    // Close modals
+                    closeAddAccountModal();
+                    closeBankAccountsModal();
+                    
+                    // Reload page to show new account
+                    window.location.reload();
+                } else {
+                    alert('Gagal menambahkan akun: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menambahkan akun');
             });
-
-            // TODO: Send to server via AJAX
-            // For now, just show success message
-            alert('Akun berhasil ditambahkan!');
-            
-            // Reset form
-            addAccountForm.reset();
-            document.getElementById('fullNameInput').value = fullName; // Restore readonly value
-            
-            // Close modals
-            closeAddAccountModal();
-            closeBankAccountsModal();
-
-            // Refresh page to show new account (temporary solution)
-            // In production, you'd update the DOM dynamically
-            // window.location.reload();
         });
     }
 });

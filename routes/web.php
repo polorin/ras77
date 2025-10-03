@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\GameController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\BankAccountController;
 
 // Main Website Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -23,6 +24,15 @@ Route::middleware(['auth', 'prevent-back-history'])->get('/member/home', [HomeCo
 Route::post('/register', [MemberAuthController::class, 'register'])->middleware('guest')->name('register.submit');
 Route::post('/login', [MemberAuthController::class, 'login'])->middleware('guest')->name('login.submit');
 Route::post('/logout', [MemberAuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+// Bank Account Routes (User)
+Route::middleware('auth')->prefix('bank-accounts')->name('bank-accounts.')->group(function () {
+    Route::get('/', [BankAccountController::class, 'index'])->name('index');
+    Route::post('/', [BankAccountController::class, 'store'])->name('store');
+    Route::put('/{id}', [BankAccountController::class, 'update'])->name('update');
+    Route::delete('/{id}', [BankAccountController::class, 'destroy'])->name('destroy');
+    Route::post('/{id}/set-primary', [BankAccountController::class, 'setPrimary'])->name('set-primary');
+});
 
 // Test route
 Route::get('/test', function () {
