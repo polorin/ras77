@@ -130,7 +130,7 @@
                 const usernameError = document.getElementById('usernameError');
                 const passwordError = document.getElementById('passwordError');
 
-                if (loginForm) {
+                if (loginForm && usernameInput && passwordInput && usernameError && passwordError) {
                     loginForm.addEventListener('submit', function(event) {
                         // Reset error messages
                         usernameError.classList.add('hidden');
