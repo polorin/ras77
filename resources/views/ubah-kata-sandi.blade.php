@@ -8,6 +8,30 @@
         UBAH KATA SANDI
     </div>
 
+    <!-- Account Tabs -->
+    <div class="account-tabs">
+        <a href="{{ route('akun') }}" class="tab-item">
+            <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/profile-active.svg?v=20250528" 
+                 alt="Akun Saya" class="tab-icon">
+            <span class="tab-label">AKUN SAYA</span>
+        </a>
+        <button class="tab-item active">
+            <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/password-active.svg?v=20250528" 
+                 alt="Ubah Kata Sandi" class="tab-icon">
+            <span class="tab-label">UBAH KATA SANDI</span>
+        </button>
+        <button class="tab-item">
+            <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/edit-active.svg?v=20250528" 
+                 alt="Profil Saya" class="tab-icon">
+            <span class="tab-label">PROFIL SAYA</span>
+        </button>
+        <button class="tab-item">
+            <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/redemption-history-active.svg?v=20250528" 
+                 alt="Riwayat Penukaran" class="tab-icon">
+            <span class="tab-label">RIWAYAT PENUKARAN</span>
+        </button>
+    </div>
+
     <!-- Password Change Form -->
     <div class="password-form-container">
         <!-- Catatan Section -->
@@ -126,6 +150,68 @@
     letter-spacing: 1.5px;
     text-transform: uppercase;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Account Tabs */
+.account-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: #2d2d2d;
+    border-bottom: 1px solid #333;
+    gap: 0;
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 8px;
+    background: #2d2d2d;
+    border: none;
+    border-right: 1px solid #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    text-decoration: none;
+}
+
+.tab-item:last-child {
+    border-right: none;
+}
+
+.tab-item.active {
+    background: #ff9500;
+}
+
+.tab-item:not(.active):hover {
+    background: #3d3d3d;
+}
+
+.tab-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 6px;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.tab-item.active .tab-icon {
+    color: #000;
+}
+
+.tab-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    color: #999;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    transition: color 0.3s ease;
+}
+
+.tab-item.active .tab-label {
+    color: #000;
 }
 
 /* Form Container */
