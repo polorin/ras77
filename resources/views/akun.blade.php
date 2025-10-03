@@ -155,25 +155,88 @@
             </div>
         </div>
 
-        <!-- Detail Perbaikan Section -->
-        <div class="detail-perbaikan-section">
+        <!-- Detail Perbankan Section -->
+        <div class="detail-perbankan-section">
             <div class="detail-header">
-                <span>DETAIL PERBARIKAN</span>
-                <button class="edit-btn">
+                <span>DETAIL PERBANKAN</span>
+                <button class="edit-btn" onclick="window.location.href='{{ route('deposit') }}'">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                     </svg>
                 </button>
             </div>
-            <div class="bank-card">
-                <div class="bank-card-header">
-                    <span class="account-label">{{ Auth::user()->account_holder_name ?? 'mj' }}</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" 
-                         alt="BCA" class="bank-logo">
+
+            @php
+                $bankAccounts = Auth::user()->activeBankAccounts;
+                $hasBankAccounts = $bankAccounts && $bankAccounts->count() > 0;
+            @endphp
+
+            @if($hasBankAccounts)
+                <!-- Bank Cards Carousel -->
+                <div class="bank-cards-carousel">
+                    <div class="carousel-container">
+                        <div class="carousel-wrapper" id="bankCarousel">
+                            @foreach($bankAccounts as $index => $account)
+                                <div class="bank-card {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}">
+                                    <div class="bank-card-header">
+                                        <span class="account-label">{{ $account->account_holder_name }}</span>
+                                        @php
+                                            $bankLogos = [
+                                                'BCA' => 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg',
+                                                'Bank Central Asia (BCA)' => 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg',
+                                                'Mandiri' => 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg',
+                                                'Bank Mandiri' => 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg',
+                                                'BNI' => 'https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg',
+                                                'Bank Negara Indonesia (BNI)' => 'https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg',
+                                            ];
+                                            $logoUrl = $bankLogos[$account->provider] ?? 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg';
+                                        @endphp
+                                        <img src="{{ $logoUrl }}" alt="{{ $account->provider }}" class="bank-logo">
+                                    </div>
+                                    <div class="account-number">{{ $account->account_number }}</div>
+                                    <div class="bank-name">{{ $account->provider }}</div>
+                                    @if($account->is_primary)
+                                        <div class="primary-badge">PRIMARY</div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Carousel Navigation -->
+                    @if($bankAccounts->count() > 1)
+                        <div class="carousel-navigation">
+                            <button class="carousel-btn prev-btn" onclick="navigateCarousel(-1)">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M15 19L8 12L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <div class="carousel-dots" id="carouselDots">
+                                @foreach($bankAccounts as $index => $account)
+                                    <span class="dot {{ $index === 0 ? 'active' : '' }}" onclick="goToSlide({{ $index }})"></span>
+                                @endforeach
+                            </div>
+                            <button class="carousel-btn next-btn" onclick="navigateCarousel(1)">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    @endif
                 </div>
-                <div class="account-number">{{ Auth::user()->account_number ?? '1299929912' }}</div>
-                <div class="bank-name">{{ Auth::user()->payment_provider ?? 'BCA' }}</div>
-            </div>
+            @else
+                <!-- No Bank Account -->
+                <div class="no-bank-account">
+                    <div class="no-account-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9 22V12H15V22" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <p class="no-account-text">Belum ada akun bank terdaftar</p>
+                    <a href="{{ route('deposit') }}" class="add-account-link">Tambahkan Akun Bank</a>
+                </div>
+            @endif
         </div>
 
         <!-- Referral Section -->
@@ -620,8 +683,8 @@
     flex-shrink: 0;
 }
 
-/* Detail Perbaikan Section */
-.detail-perbaikan-section {
+/* Detail Perbankan Section */
+.detail-perbankan-section {
     margin: 16px;
 }
 
@@ -646,6 +709,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+    color: #ff9500;
 }
 
 .edit-btn svg {
@@ -653,10 +721,27 @@
     height: 18px;
 }
 
+/* Bank Cards Carousel */
+.bank-cards-carousel {
+    position: relative;
+}
+
+.carousel-container {
+    overflow: hidden;
+    border-radius: 0 0 6px 6px;
+}
+
+.carousel-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
 .bank-card {
+    min-width: 100%;
     background: linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%);
     padding: 16px;
-    border-radius: 0 0 6px 6px;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .bank-card-header {
@@ -671,11 +756,14 @@
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .bank-logo {
     height: 24px;
     width: auto;
+    max-width: 80px;
+    object-fit: contain;
 }
 
 .account-number {
@@ -690,6 +778,120 @@
     color: white;
     font-size: 13px;
     font-weight: 600;
+}
+
+.primary-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #ff9500;
+    color: #000;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* Carousel Navigation */
+.carousel-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 12px;
+    background: #1a1a1a;
+}
+
+.carousel-btn {
+    background: #2d2d2d;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.carousel-btn:hover {
+    background: #ff9500;
+    color: #000;
+}
+
+.carousel-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.carousel-btn:disabled:hover {
+    background: #2d2d2d;
+    color: white;
+}
+
+.carousel-dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4a4a4a;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: #ff9500;
+    width: 24px;
+    border-radius: 4px;
+}
+
+.dot:hover {
+    background: #666;
+}
+
+/* No Bank Account */
+.no-bank-account {
+    background: #2d2d2d;
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 0 0 6px 6px;
+}
+
+.no-account-icon {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.no-account-text {
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.add-account-link {
+    display: inline-block;
+    background: #ff9500;
+    color: #000;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.add-account-link:hover {
+    background: #ff8000;
+    transform: translateY(-2px);
 }
 
 /* Referral Section */
@@ -903,5 +1105,85 @@
             }, 5000);
         }
     });
+
+    // Bank Cards Carousel
+    let currentSlide = 0;
+    const carousel = document.getElementById('bankCarousel');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+
+    if (carousel) {
+        const totalSlides = carousel.querySelectorAll('.bank-card').length;
+
+        function updateCarousel() {
+            const offset = -currentSlide * 100;
+            carousel.style.transform = `translateX(${offset}%)`;
+
+            // Update dots
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+
+            // Update navigation buttons
+            if (prevBtn) {
+                prevBtn.disabled = currentSlide === 0;
+            }
+            if (nextBtn) {
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+            }
+        }
+
+        // Navigate carousel
+        window.navigateCarousel = function(direction) {
+            currentSlide += direction;
+            
+            // Keep within bounds
+            if (currentSlide < 0) {
+                currentSlide = 0;
+            } else if (currentSlide >= totalSlides) {
+                currentSlide = totalSlides - 1;
+            }
+
+            updateCarousel();
+        };
+
+        // Go to specific slide
+        window.goToSlide = function(index) {
+            currentSlide = index;
+            updateCarousel();
+        };
+
+        // Touch swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left
+                navigateCarousel(1);
+            }
+            if (touchEndX > touchStartX + 50) {
+                // Swipe right
+                navigateCarousel(-1);
+            }
+        }
+
+        // Initialize
+        updateCarousel();
+    }
 </script>
 @endpush

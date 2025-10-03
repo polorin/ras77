@@ -75,4 +75,28 @@ class User extends Authenticatable
             'last_login_ip' => $ip ?? request()->ip(),
         ]);
     }
+
+    /**
+     * Get the user's bank accounts.
+     */
+    public function bankAccounts()
+    {
+        return $this->hasMany(UserBankAccount::class);
+    }
+
+    /**
+     * Get the user's active bank accounts.
+     */
+    public function activeBankAccounts()
+    {
+        return $this->hasMany(UserBankAccount::class)->where('is_active', true);
+    }
+
+    /**
+     * Get the user's primary bank account.
+     */
+    public function primaryBankAccount()
+    {
+        return $this->hasOne(UserBankAccount::class)->where('is_primary', true);
+    }
 }
