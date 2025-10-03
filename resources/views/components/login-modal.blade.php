@@ -125,12 +125,12 @@
 
                 // Client-side form validation
                 const loginForm = document.getElementById('loginForm');
-                const usernameInput = document.getElementById('loginUsername');
-                const passwordInput = document.getElementById('loginPassword');
+                const usernameField = document.getElementById('loginUsername');
+                const passwordField = document.getElementById('loginPassword');
                 const usernameError = document.getElementById('usernameError');
                 const passwordError = document.getElementById('passwordError');
 
-                if (loginForm && usernameInput && passwordInput && usernameError && passwordError) {
+                if (loginForm && usernameField && passwordField && usernameError && passwordError) {
                     loginForm.addEventListener('submit', function(event) {
                         // Reset error messages
                         usernameError.classList.add('hidden');
@@ -141,14 +141,14 @@
                         let hasError = false;
 
                         // Validate username
-                        if (!usernameInput.value.trim()) {
+                        if (!usernameField.value.trim()) {
                             usernameError.textContent = 'Harap masukkan nama pengguna';
                             usernameError.classList.remove('hidden');
                             hasError = true;
                         }
 
                         // Validate password
-                        if (!passwordInput.value.trim()) {
+                        if (!passwordField.value.trim()) {
                             passwordError.textContent = 'Harap masukkan kata sandi';
                             passwordError.classList.remove('hidden');
                             hasError = true;
@@ -158,10 +158,10 @@
                         if (hasError) {
                             event.preventDefault();
                             // Focus on first empty field
-                            if (!usernameInput.value.trim()) {
-                                usernameInput.focus();
-                            } else if (!passwordInput.value.trim()) {
-                                passwordInput.focus();
+                            if (!usernameField.value.trim()) {
+                                usernameField.focus();
+                            } else if (!passwordField.value.trim()) {
+                                passwordField.focus();
                             }
                         }
                     });
