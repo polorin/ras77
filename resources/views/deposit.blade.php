@@ -1385,11 +1385,129 @@
         font-size: 13px;
     }
 }
+
+/* Toast Notification Styles */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #2d2d2d;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    max-width: 400px;
+    border: 1px solid #3a3a3a;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toast-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+    background: #4ade80;
+    color: #000;
+}
+
+.toast-error .toast-icon {
+    background: #ef4444;
+    color: #fff;
+}
+
+.toast-message {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.toast-success {
+    border-left: 4px solid #4ade80;
+}
+
+.toast-error {
+    border-left: 4px solid #ef4444;
+}
+
+/* Toast Mobile Responsive */
+@media (max-width: 640px) {
+    .toast-notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        transform: translateY(-100px);
+    }
+    
+    .toast-notification.show {
+        transform: translateY(0);
+    }
+}
 </style>
 @endpush
 
 @push('scripts')
 <script>
+// Toast Notification Function
+function showToast(message, type = 'success') {
+    // Remove existing toast if any
+    const existingToast = document.getElementById('toast-notification');
+    if (existingToast) {
+        existingToast.remove();
+    }
+
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.id = 'toast-notification';
+    toast.className = `toast-notification toast-${type}`;
+    toast.innerHTML = `
+        <div class="toast-content">
+            <div class="toast-icon">
+                ${type === 'success' ? '✓' : '✕'}
+            </div>
+            <span class="toast-message">${message}</span>
+        </div>
+    `;
+
+    // Add to body
+    document.body.appendChild(toast);
+
+    // Show toast with animation
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Tab switching
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -1718,18 +1836,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const bankProvider = document.getElementById('bankProviderSelect').value;
             const accountNumber = document.getElementById('accountNumberInput').value;
             const fullName = document.getElementById('fullNameInput').value;
+            const submitBtn = addAccountForm.querySelector('.submit-account-btn');
+
+            console.log('Form submission started...', { bankProvider, accountNumber, fullName });
 
             if (!bankProvider || !accountNumber) {
-                alert('Silakan lengkapi semua field');
+                showToast('Silakan lengkapi semua field yang diperlukan', 'error');
                 return;
             }
+
+            // Disable button while submitting
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menambahkan...';
 
             // Send to server via AJAX
             fetch('{{ route("bank-accounts.store") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     provider: bankProvider,
@@ -1738,28 +1864,52 @@ document.addEventListener('DOMContentLoaded', function() {
                     is_primary: false
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Akun berhasil ditambahkan!');
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json().then(data => ({
+                    status: response.status,
+                    data: data
+                }));
+            })
+            .then(({ status, data }) => {
+                console.log('Response data:', data);
+                
+                if (status >= 200 && status < 300 && data.success) {
+                    showToast('✓ Akun bank berhasil ditambahkan!', 'success');
                     
                     // Reset form
                     addAccountForm.reset();
                     document.getElementById('fullNameInput').value = fullName;
                     
                     // Close modals
-                    closeAddAccountModal();
-                    closeBankAccountsModal();
-                    
-                    // Reload page to show new account
-                    window.location.reload();
+                    setTimeout(() => {
+                        closeAddAccountModal();
+                        closeBankAccountsModal();
+                        
+                        // Reload page to show new account
+                        window.location.reload();
+                    }, 1500);
                 } else {
-                    alert('Gagal menambahkan akun: ' + (data.message || 'Unknown error'));
+                    // Handle validation errors
+                    if (data.errors) {
+                        const errorMessages = Object.values(data.errors).flat().join(', ');
+                        showToast('Error: ' + errorMessages, 'error');
+                    } else {
+                        showToast('Gagal menambahkan akun: ' + (data.message || 'Unknown error'), 'error');
+                    }
+                    
+                    // Re-enable button
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Tambahkan Akun';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat menambahkan akun');
+                showToast('Terjadi kesalahan koneksi. Silakan coba lagi.', 'error');
+                
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Tambahkan Akun';
             });
         });
     }
