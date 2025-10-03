@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\GameController;
 use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
 
 // Main Website Routes
@@ -70,6 +71,10 @@ Route::prefix('admin')->group(function () {
         Route::resource('promosi', PromotionController::class)
             ->except(['show'])
             ->names('admin.promosi');
+
+        // User management routes
+        Route::resource('users', UserController::class)
+            ->names('admin.users');
     });
     
     // Redirect /admin to login

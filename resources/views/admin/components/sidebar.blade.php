@@ -10,21 +10,18 @@
 
             <!-- User Management -->
             <div class="menu-group">
-                <button onclick="toggleSubmenu('userSubmenu')" class="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors group">
+                <button onclick="toggleSubmenu('userSubmenu')" class="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors group {{ request()->is('admin/users*') ? 'bg-gray-800' : '' }}">
                     <div class="flex items-center">
                         <i class="fas fa-users w-5 mr-3"></i>
                         <span class="font-medium">User</span>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform" id="userSubmenu-icon"></i>
+                    <i class="fas fa-chevron-down text-xs transition-transform {{ request()->is('admin/users*') ? 'rotate-180' : '' }}" id="userSubmenu-icon"></i>
                 </button>
-                <div id="userSubmenu" class="hidden mt-1 ml-8 space-y-1">
-                    <a href="#" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm text-gray-300 hover:text-white">
-                        <i class="fas fa-list text-xs mr-2"></i> Data User
+                <div id="userSubmenu" class="{{ request()->is('admin/users*') ? '' : 'hidden' }} mt-1 ml-8 space-y-1">
+                    <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm {{ request()->routeIs('admin.users.index') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:text-white' }}">
+                        <i class="fas fa-list text-xs mr-2"></i> Kelola User
                     </a>
-                    <a href="#" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm text-gray-300 hover:text-white">
-                        <i class="fas fa-university text-xs mr-2"></i> Data Bank
-                    </a>
-                    <a href="#" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm text-gray-300 hover:text-white">
+                    <a href="{{ route('admin.users.create') }}" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm {{ request()->routeIs('admin.users.create') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:text-white' }}">
                         <i class="fas fa-plus text-xs mr-2"></i> Tambah User
                     </a>
                 </div>
