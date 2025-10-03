@@ -181,19 +181,37 @@
                 <label class="form-label">
                     Akun Tujuan <span class="required">*</span>
                 </label>
-                <select class="account-select" id="destinationAccount">
-                    <option value="">Pilih Akun Tujuan</option>
-                    <option value="bca-0670950263" data-bank="BCA" data-holder="BETARI NUR AZIS">BCA - 0670950263</option>
-                    <option value="mandiri-1234567890" data-bank="Mandiri" data-holder="PT RAS77">Mandiri - 1234567890</option>
-                </select>
+                <div class="account-select-container">
+                    @php
+                        $adminBankAccounts = \App\Models\AdminBankAccount::active()->ordered()->get();
+                        $firstAccount = $adminBankAccounts->first();
+                    @endphp
+                    @if($firstAccount)
+                        <button type="button" class="account-display-btn" id="destinationAccountDisplay" onclick="showDestinationModal()">
+                            <div class="selected-account-info">
+                                <span class="account-bank-name">{{ $firstAccount->bank_name }}</span>
+                                <span class="account-number-display">{{ $firstAccount->account_number }}</span>
+                            </div>
+                            <svg class="chevron-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <input type="hidden" id="destinationAccountId" value="{{ $firstAccount->id }}">
+                    @else
+                        <div class="alert alert-warning" style="margin: 0;">
+                            <small>Belum ada rekening tujuan. Silakan hubungi admin.</small>
+                        </div>
+                    @endif
+                </div>
             </div>
 
             <!-- Destination Account Info Card -->
-            <div class="destination-account-card" id="destinationAccountInfo" style="display: none;">
+            @if($firstAccount)
+            <div class="destination-account-card" id="destinationAccountInfo">
                 <div class="account-card-header">
-                    <div class="account-holder-name" id="accountHolderName">BETARI NUR AZIS</div>
+                    <div class="account-holder-name" id="accountHolderName">{{ $firstAccount->account_holder_name }}</div>
                     <div class="account-number-display">
-                        <span id="accountNumberDisplay">0670-9502-63</span>
+                        <span id="accountNumberDisplay">{{ $firstAccount->account_number }}</span>
                         <button class="copy-btn" type="button" onclick="copyAccountNumber()">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M7 7V4C7 3.44772 7.44772 3 8 3H16C16.5523 3 17 3.44772 17 4V12C17 12.5523 16.5523 13 16 13H13M4 7H12C12.5523 7 13 7.44772 13 8V16C13 16.5523 12.5523 17 12 17H4C3.44772 17 3 16.5523 3 16V8C3 7.44772 3.44772 7 4 7Z" stroke="currentColor" stroke-width="1.5"/>
