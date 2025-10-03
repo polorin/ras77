@@ -558,7 +558,7 @@
         <!-- Unclaimed State -->
         <div id="unclaimedState" class="reward-state">
             <div class="chest-image-container">
-                <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/loyalty/chest-available.webp?v=20250528" alt="Chest Closed" class="chest-modal-image">
+                <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/loyalty/chest-close.webp?v=20250528" alt="Chest Closed" class="chest-modal-image">
             </div>
             
             <h2 class="modal-title">HADIAH LOGIN HARIAN</h2>
