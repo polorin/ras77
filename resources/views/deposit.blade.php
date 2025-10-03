@@ -1471,7 +1471,9 @@
 @push('scripts')
 <script>
 // Toast Notification Function
-function showToast(message, type = 'success') {
+function showToast(message, type = 'success', duration = 4000) {
+    console.log('showToast called:', { message, type, duration });
+    
     // Remove existing toast if any
     const existingToast = document.getElementById('toast-notification');
     if (existingToast) {
@@ -1493,19 +1495,23 @@ function showToast(message, type = 'success') {
 
     // Add to body
     document.body.appendChild(toast);
+    console.log('Toast element added to body');
 
     // Show toast with animation
     setTimeout(() => {
         toast.classList.add('show');
+        console.log('Toast show class added');
     }, 100);
 
-    // Auto hide after 3 seconds
+    // Auto hide after duration
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
             toast.remove();
         }, 300);
-    }, 3000);
+    }, duration);
+    
+    return toast;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1875,20 +1881,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Response data:', data);
                 
                 if (status >= 200 && status < 300 && data.success) {
-                    showToast('✓ Akun bank berhasil ditambahkan!', 'success');
+                    // Show success toast with longer duration
+                    showToast('✓ Akun bank berhasil ditambahkan!', 'success', 3000);
                     
                     // Reset form
                     addAccountForm.reset();
                     document.getElementById('fullNameInput').value = fullName;
                     
-                    // Close modals
+                    // Close modals and reload after toast is visible
                     setTimeout(() => {
                         closeAddAccountModal();
                         closeBankAccountsModal();
                         
                         // Reload page to show new account
                         window.location.reload();
-                    }, 1500);
+                    }, 2500);
                 } else {
                     // Handle validation errors
                     if (data.errors) {
