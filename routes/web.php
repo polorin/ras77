@@ -85,6 +85,17 @@ Route::prefix('admin')->group(function () {
         // User management routes
         Route::resource('users', UserController::class)
             ->names('admin.users');
+
+        // Bank Account management routes
+        Route::prefix('bank-accounts')->name('admin.bank-accounts.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\BankAccountController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\BankAccountController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\BankAccountController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\BankAccountController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\BankAccountController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\BankAccountController::class, 'destroy'])->name('destroy');
+            Route::patch('/{id}/toggle-active', [\App\Http\Controllers\Admin\BankAccountController::class, 'toggleActive'])->name('toggle-active');
+        });
     });
     
     // Redirect /admin to login
