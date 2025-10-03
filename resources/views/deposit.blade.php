@@ -156,21 +156,23 @@
                     Akun Asal <span class="required">*</span>
                 </label>
                 <div class="account-select-container">
-                    <select class="account-select" id="sourceAccount">
-                        <option value="">Pilih Akun Asal</option>
-                        @if(Auth::check())
-                            @foreach(Auth::user()->activeBankAccounts as $account)
-                                <option value="{{ $account->id }}" {{ $account->is_primary ? 'selected' : '' }}>
-                                    {{ $account->provider }} - {{ $account->account_number }}
-                                </option>
-                            @endforeach
+                    <button type="button" class="account-display-btn" id="sourceAccountDisplay" onclick="showBankAccountsModal()">
+                        @php
+                            $primaryAccount = Auth::check() ? Auth::user()->bankAccounts()->where('is_primary', true)->first() : null;
+                        @endphp
+                        @if($primaryAccount)
+                            <div class="selected-account-info">
+                                <span class="account-bank-name">{{ $primaryAccount->provider }}</span>
+                                <span class="account-number-display">{{ $primaryAccount->account_number }}</span>
+                            </div>
+                        @else
+                            <span class="placeholder-text">Pilih Akun Asal</span>
                         @endif
-                    </select>
-                    <button class="add-account-btn" type="button" id="showBankAccountsBtn">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <svg class="chevron-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
+                    <input type="hidden" id="sourceAccountId" value="{{ $primaryAccount ? $primaryAccount->id : '' }}">
                 </div>
             </div>
 
@@ -854,11 +856,11 @@
 /* Bank Transfer Form Specific Styles */
 .account-select-container {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: stretch;
+    width: 100%;
 }
 
-.account-select {
+.account-display-btn {
     flex: 1;
     background: #2d2d2d;
     border: 1px solid #3a3a3a;
@@ -868,28 +870,45 @@
     font-size: 13px;
     outline: none;
     cursor: pointer;
-}
-
-.account-select option {
-    background: #2d2d2d;
-    color: white;
-}
-
-.add-account-btn {
-    background: #ff9500;
-    border: none;
-    border-radius: 6px;
-    padding: 10px;
-    color: #000;
-    cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 12px;
     transition: all 0.3s ease;
+    text-align: left;
 }
 
-.add-account-btn:hover {
-    background: #ff8000;
+.account-display-btn:hover {
+    border-color: #ff9500;
+    background: #3a3a3a;
+}
+
+.selected-account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.account-bank-name {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.account-number-display {
+    color: #999;
+    font-size: 12px;
+}
+
+.placeholder-text {
+    color: #666;
+    font-size: 13px;
+}
+
+.chevron-icon {
+    flex-shrink: 0;
+    color: #999;
 }
 
 .destination-account-card {
@@ -1394,13 +1413,14 @@
     background: #2d2d2d;
     border-radius: 12px;
     padding: 16px 20px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    z-index: 10000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 149, 0, 0.1);
+    z-index: 99999;
     opacity: 0;
     transform: translateX(400px);
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     max-width: 400px;
     border: 1px solid #3a3a3a;
+    pointer-events: all;
 }
 
 .toast-notification.show {
@@ -1832,6 +1852,38 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Handle bank account selection in modal
+    const accountRadios = document.querySelectorAll('input[name="selected_account"]');
+    accountRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.checked) {
+                const accountItem = this.closest('.bank-account-item');
+                const bankName = accountItem.querySelector('.account-bank-number').textContent.split('|')[0].trim();
+                const accountNumber = accountItem.querySelector('.account-bank-number').textContent.split('|')[1].trim();
+                
+                // Update the display button
+                const displayBtn = document.getElementById('sourceAccountDisplay');
+                displayBtn.innerHTML = `
+                    <div class="selected-account-info">
+                        <span class="account-bank-name">${bankName}</span>
+                        <span class="account-number-display">${accountNumber}</span>
+                    </div>
+                    <svg class="chevron-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `;
+                
+                // Update hidden input
+                document.getElementById('sourceAccountId').value = this.value;
+                
+                // Close modal
+                closeBankAccountsModal();
+                
+                console.log('Bank account selected:', { bankName, accountNumber, id: this.value });
+            }
+        });
+    });
 
     // Add Account Form Submit
     const addAccountForm = document.getElementById('addAccountForm');
