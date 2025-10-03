@@ -27,11 +27,23 @@
                 </div>
             </div>
 
-            <!-- Rekening -->
-            <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors group">
-                <i class="fas fa-credit-card w-5 mr-3"></i>
-                <span class="font-medium">Rekening</span>
-            </a>
+            <!-- Rekening Bank -->\n            <div class="menu-group">
+                <button onclick="toggleSubmenu('rekeningSubmenu')" class="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors group {{ request()->is('admin/bank-accounts*') ? 'bg-gray-800' : '' }}">
+                    <div class="flex items-center">
+                        <i class="fas fa-university w-5 mr-3"></i>
+                        <span class="font-medium">Rekening Bank</span>
+                    </div>
+                    <i class="fas fa-chevron-down text-xs transition-transform {{ request()->is('admin/bank-accounts*') ? 'rotate-180' : '' }}" id="rekeningSubmenu-icon"></i>
+                </button>
+                <div id="rekeningSubmenu" class="{{ request()->is('admin/bank-accounts*') ? '' : 'hidden' }} mt-1 ml-8 space-y-1">
+                    <a href="{{ route('admin.bank-accounts.index') }}" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm {{ request()->routeIs('admin.bank-accounts.index') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:text-white' }}">
+                        <i class="fas fa-list text-xs mr-2"></i> Kelola Rekening
+                    </a>
+                    <a href="{{ route('admin.bank-accounts.create') }}" class="block px-4 py-2 rounded hover:bg-gray-800 text-sm {{ request()->routeIs('admin.bank-accounts.create') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:text-white' }}">
+                        <i class="fas fa-plus text-xs mr-2"></i> Tambah Rekening
+                    </a>
+                </div>
+            </div>
 
             <!-- Games -->
             <div class="menu-group">
