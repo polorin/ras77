@@ -3,11 +3,6 @@
 @section('title', 'Ubah Kata Sandi')
 
 @section('content')
-    <!-- Page Header -->
-    <div class="password-page-header">
-        UBAH KATA SANDI
-    </div>
-
     <!-- Account Tabs -->
     <div class="account-tabs">
         <a href="{{ route('akun') }}" class="tab-item">
@@ -139,19 +134,6 @@
 
 @push('styles')
 <style>
-/* Password Page Header */
-.password-page-header {
-    background: linear-gradient(90deg, #ff9500 0%, #ffb84d 100%);
-    color: white;
-    font-size: 20px;
-    font-weight: 700;
-    text-align: center;
-    padding: 16px 20px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
 /* Account Tabs */
 .account-tabs {
     display: grid;
@@ -414,11 +396,6 @@
 
 /* Desktop Responsive */
 @media (min-width: 768px) {
-    .password-page-header {
-        font-size: 24px;
-        padding: 20px 24px;
-    }
-
     .password-form-container {
         padding: 32px 24px;
     }
