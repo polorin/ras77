@@ -82,11 +82,11 @@
                      alt="Akun Saya" class="tab-icon">
                 <span class="tab-label">AKUN SAYA</span>
             </button>
-            <button class="tab-item">
+            <a href="{{ route('ubah-kata-sandi') }}" class="tab-item">
                 <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/password-active.svg?v=20250528" 
                      alt="Ubah Kata Sandi" class="tab-icon">
                 <span class="tab-label">UBAH KATA SANDI</span>
-            </button>
+            </a>
             <button class="tab-item">
                 <img src="https://dsuown9evwz4y.cloudfront.net/Images/~normad-alpha/dark-orange/mobile/tabs/edit-active.svg?v=20250528" 
                      alt="Profil Saya" class="tab-icon">

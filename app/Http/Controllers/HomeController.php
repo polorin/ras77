@@ -114,6 +114,15 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the change password page.
+     */
+    public function ubahKataSandi()
+    {
+        $settings = $this->getSettings();
+        return view('ubah-kata-sandi', compact('settings'));
+    }
+
+    /**
      * Display member home page after login.
      */
     public function memberHome()
