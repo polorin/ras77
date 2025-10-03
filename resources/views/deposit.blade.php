@@ -295,30 +295,25 @@
                         
                         @if($bankAccounts->count() > 0)
                             @foreach($bankAccounts as $index => $account)
-                                <div class="bank-account-item">
-                                    <div class="account-radio">
-                                        <input type="radio" name="selected_account" value="{{ $account->id }}" id="account_{{ $account->id }}" {{ $account->is_primary ? 'checked' : '' }}>
+                                <div class="bank-account-item" 
+                                     data-account-id="{{ $account->id }}" 
+                                     data-bank-name="{{ $account->provider }}" 
+                                     data-account-number="{{ $account->account_number }}">
+                                    <div class="bank-logo-container">
+                                        @php
+                                            $bankLogos = [
+                                                'Bank Central Asia (BCA)' => 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg',
+                                                'Bank Mandiri' => 'https://upload.wikimedia.org/wikipedia/id/a/ad/Bank_Mandiri_logo_2016.svg',
+                                                'Bank Negara Indonesia (BNI)' => 'https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg',
+                                                'Bank Rakyat Indonesia (BRI)' => 'https://upload.wikimedia.org/wikipedia/id/2/2e/BRI_2020.svg',
+                                            ];
+                                            $logoUrl = $bankLogos[$account->provider] ?? 'https://via.placeholder.com/48x48?text=Bank';
+                                        @endphp
+                                        <img src="{{ $logoUrl }}" alt="{{ $account->provider }}" class="account-bank-logo">
                                     </div>
-                                    <div class="account-info">
-                                        <div class="bank-logo-container">
-                                            @php
-                                                $bankLogos = [
-                                                    'Bank Central Asia (BCA)' => 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg',
-                                                    'Bank Mandiri' => 'https://upload.wikimedia.org/wikipedia/id/a/ad/Bank_Mandiri_logo_2016.svg',
-                                                    'Bank Negara Indonesia (BNI)' => 'https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg',
-                                                    'Bank Rakyat Indonesia (BRI)' => 'https://upload.wikimedia.org/wikipedia/id/2/2e/BRI_2020.svg',
-                                                ];
-                                                $logoUrl = $bankLogos[$account->provider] ?? 'https://via.placeholder.com/48x48?text=Bank';
-                                            @endphp
-                                            <img src="{{ $logoUrl }}" alt="{{ $account->provider }}" class="account-bank-logo">
-                                        </div>
-                                        <div class="account-details">
-                                            <div class="account-bank-number">{{ $account->provider }} | {{ $account->account_number }}</div>
-                                            <div class="account-holder">{{ $account->account_holder_name }}</div>
-                                        </div>
-                                    </div>
-                                    <div class="account-status">
-                                        <span class="status-indicator {{ $account->is_primary ? 'active' : '' }}"></span>
+                                    <div class="account-details">
+                                        <div class="account-bank-number">{{ $account->provider }} | {{ $account->account_number }}</div>
+                                        <div class="account-holder">{{ $account->account_holder_name }}</div>
                                     </div>
                                 </div>
                             @endforeach
@@ -1167,20 +1162,11 @@
 .bank-account-item:hover {
     background: #3a3a3a;
     border-color: #ff9500;
+    transform: translateX(4px);
 }
 
-.account-radio input[type="radio"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: #4ade80;
-}
-
-.account-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
+.bank-account-item:active {
+    transform: scale(0.98);
 }
 
 .bank-logo-container {
@@ -1214,24 +1200,6 @@
 .account-holder {
     color: #999;
     font-size: 12px;
-}
-
-.account-status {
-    display: flex;
-    align-items: center;
-}
-
-.status-indicator {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid #666;
-    background: transparent;
-}
-
-.status-indicator.active {
-    background: #4ade80;
-    border-color: #4ade80;
 }
 
 /* Add Account Section */
@@ -1853,17 +1821,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle bank account selection in modal
-    const accountRadios = document.querySelectorAll('input[name="selected_account"]');
-    accountRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.checked) {
-                const accountItem = this.closest('.bank-account-item');
-                const bankName = accountItem.querySelector('.account-bank-number').textContent.split('|')[0].trim();
-                const accountNumber = accountItem.querySelector('.account-bank-number').textContent.split('|')[1].trim();
-                
-                // Update the display button
-                const displayBtn = document.getElementById('sourceAccountDisplay');
+    // Handle bank account selection in modal - entire item is clickable
+    const bankAccountItems = document.querySelectorAll('.bank-account-item');
+    bankAccountItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Get data from data attributes
+            const accountId = this.getAttribute('data-account-id');
+            const bankName = this.getAttribute('data-bank-name');
+            const accountNumber = this.getAttribute('data-account-number');
+            
+            console.log('Bank account clicked:', { accountId, bankName, accountNumber });
+            
+            // Update the display button
+            const displayBtn = document.getElementById('sourceAccountDisplay');
+            if (displayBtn) {
                 displayBtn.innerHTML = `
                     <div class="selected-account-info">
                         <span class="account-bank-name">${bankName}</span>
@@ -1873,15 +1844,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 `;
-                
-                // Update hidden input
-                document.getElementById('sourceAccountId').value = this.value;
-                
-                // Close modal
-                closeBankAccountsModal();
-                
-                console.log('Bank account selected:', { bankName, accountNumber, id: this.value });
             }
+            
+            // Update hidden input
+            const hiddenInput = document.getElementById('sourceAccountId');
+            if (hiddenInput) {
+                hiddenInput.value = accountId;
+            }
+            
+            // Close modal
+            closeBankAccountsModal();
+            
+            console.log('Bank account selected successfully');
         });
     });
 
