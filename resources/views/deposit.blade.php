@@ -132,6 +132,132 @@
                 KIRIM
             </button>
         </div>
+
+        <!-- Form Deposit BANK TRANSFER -->
+        <div class="deposit-form-section" id="bank-form" style="display: none;">
+            <!-- Jumlah -->
+            <div class="form-group">
+                <label class="form-label">
+                    Jumlah <span class="required">*</span>
+                </label>
+                <div class="amount-input-container">
+                    <span class="input-prefix">IDR</span>
+                    <input type="text" class="amount-input" placeholder="0" value="0" id="bankDepositAmount">
+                </div>
+                <div class="amount-limits">
+                    <span>Min: 25,000.00</span>
+                    <span>Max: 100,000,000.00</span>
+                </div>
+            </div>
+
+            <!-- Akun Asal -->
+            <div class="form-group">
+                <label class="form-label">
+                    Akun Asal <span class="required">*</span>
+                </label>
+                <div class="account-select-container">
+                    <select class="account-select" id="sourceAccount">
+                        <option value="">Pilih Akun Asal</option>
+                        <option value="bca-1299929912">BCA - 1299929912</option>
+                        <option value="bni-1234567890">BNI - 1234567890</option>
+                        <option value="mandiri-9876543210">Mandiri - 9876543210</option>
+                    </select>
+                    <button class="add-account-btn" type="button">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Akun Tujuan -->
+            <div class="form-group">
+                <label class="form-label">
+                    Akun Tujuan <span class="required">*</span>
+                </label>
+                <select class="account-select" id="destinationAccount">
+                    <option value="">Pilih Akun Tujuan</option>
+                    <option value="bca-0670950263" data-bank="BCA" data-holder="BETARI NUR AZIS">BCA - 0670950263</option>
+                    <option value="mandiri-1234567890" data-bank="Mandiri" data-holder="PT RAS77">Mandiri - 1234567890</option>
+                </select>
+            </div>
+
+            <!-- Destination Account Info Card -->
+            <div class="destination-account-card" id="destinationAccountInfo" style="display: none;">
+                <div class="account-card-header">
+                    <div class="account-holder-name" id="accountHolderName">BETARI NUR AZIS</div>
+                    <div class="account-number-display">
+                        <span id="accountNumberDisplay">0670-9502-63</span>
+                        <button class="copy-btn" type="button" onclick="copyAccountNumber()">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7 7V4C7 3.44772 7.44772 3 8 3H16C16.5523 3 17 3.44772 17 4V12C17 12.5523 16.5523 13 16 13H13M4 7H12C12.5523 7 13 7.44772 13 8V16C13 16.5523 12.5523 17 12 17H4C3.44772 17 3 16.5523 3 16V8C3 7.44772 3.44772 7 4 7Z" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="account-card-footer">
+                    <div class="admin-fee">
+                        <span class="admin-fee-label">Biaya Admin:</span>
+                        <span class="admin-fee-value">IDR 0.00</span>
+                    </div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="Bank Logo" class="bank-logo-card" id="bankLogoCard">
+                </div>
+            </div>
+
+            <!-- Jumlah yang ditransfer -->
+            <div class="form-group">
+                <div class="transfer-section-header" id="bankTransferHeader">
+                    <span class="form-label">Jumlah yang ditransfer</span>
+                    <div class="transfer-amount-display">
+                        <span class="transfer-amount-label">IDR</span>
+                        <span class="transfer-amount-value" id="bankTransferAmountValue">0</span>
+                        <button class="transfer-toggle-btn" type="button">
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Transfer Details Dropdown -->
+                <div class="transfer-details" id="bankTransferDetails" style="display: none;">
+                    <div class="transfer-detail-row">
+                        <span class="detail-label">Rincian Deposit</span>
+                    </div>
+                    <div class="transfer-detail-row">
+                        <span class="detail-label">Jumlah yang ditransfer</span>
+                        <span class="detail-value" id="bankDetailTransferAmount">IDR 0</span>
+                    </div>
+                    <div class="transfer-detail-row">
+                        <span class="detail-label">Biaya Admin</span>
+                        <span class="detail-value">IDR 0.00</span>
+                    </div>
+                    <div class="transfer-detail-row">
+                        <span class="detail-label">Jumlah yang didapat</span>
+                        <span class="detail-value" id="bankDetailReceivedAmount">IDR 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bukti Transfer -->
+            <div class="form-group">
+                <label class="form-label">Bukti Transfer</label>
+                <div class="file-upload-container">
+                    <input type="file" id="proofOfTransfer" accept="image/*" style="display: none;">
+                    <label for="proofOfTransfer" class="file-upload-label">
+                        <button type="button" class="file-upload-btn" onclick="document.getElementById('proofOfTransfer').click();">
+                            Pilih File
+                        </button>
+                        <span class="file-upload-text" id="fileUploadText">tidak ada file yang dipilih</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">
+                KIRIM
+            </button>
+        </div>
     </div>
 
     <!-- Withdrawal Content (Hidden by default) -->
@@ -546,6 +672,164 @@
     transform: translateY(0);
 }
 
+/* Bank Transfer Form Specific Styles */
+.account-select-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.account-select {
+    flex: 1;
+    background: #2d2d2d;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: white;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+}
+
+.account-select option {
+    background: #2d2d2d;
+    color: white;
+}
+
+.add-account-btn {
+    background: #ff9500;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.add-account-btn:hover {
+    background: #ff8000;
+}
+
+.destination-account-card {
+    background: #2d2d2d;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 12px;
+}
+
+.account-card-header {
+    margin-bottom: 12px;
+}
+
+.account-holder-name {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.account-number-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1a1a1a;
+    padding: 10px 12px;
+    border-radius: 6px;
+}
+
+.account-number-display span {
+    color: #ff9500;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.copy-btn {
+    background: transparent;
+    border: none;
+    color: #ff9500;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    color: #ff8000;
+}
+
+.account-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid #3a3a3a;
+}
+
+.admin-fee {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-fee-label {
+    color: #999;
+    font-size: 11px;
+}
+
+.admin-fee-value {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.bank-logo-card {
+    width: 60px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.file-upload-container {
+    background: #2d2d2d;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    padding: 12px 16px;
+}
+
+.file-upload-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.file-upload-btn {
+    background: #ff9500;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    color: #000;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-upload-btn:hover {
+    background: #ff8000;
+}
+
+.file-upload-text {
+    color: #999;
+    font-size: 12px;
+}
+
 /* Coming Soon */
 .coming-soon {
     padding: 60px 20px;
@@ -623,8 +907,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Payment method selection
+    // Payment method selection and form switching
     const paymentMethods = document.querySelectorAll('.payment-method-btn');
+    const qrisForm = document.querySelector('.deposit-form-section:not(#bank-form)');
+    const bankForm = document.getElementById('bank-form');
 
     paymentMethods.forEach(method => {
         method.addEventListener('click', function() {
@@ -636,6 +922,15 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const methodName = this.getAttribute('data-method');
             console.log('Selected payment method:', methodName);
+            
+            // Switch between forms based on method
+            if (methodName === 'bank') {
+                if (qrisForm) qrisForm.style.display = 'none';
+                if (bankForm) bankForm.style.display = 'block';
+            } else {
+                if (qrisForm) qrisForm.style.display = 'block';
+                if (bankForm) bankForm.style.display = 'none';
+            }
         });
     });
 
@@ -714,6 +1009,141 @@ document.addEventListener('DOMContentLoaded', function() {
         const num = parseFloat(this.value) || 0;
         updateTransferAmounts(num);
     });
+
+    // Bank Transfer Form Handlers
+    const bankAmountInput = document.getElementById('bankDepositAmount');
+    const bankTransferAmountValue = document.getElementById('bankTransferAmountValue');
+    const bankDetailTransferAmount = document.getElementById('bankDetailTransferAmount');
+    const bankDetailReceivedAmount = document.getElementById('bankDetailReceivedAmount');
+    const bankTransferHeader = document.getElementById('bankTransferHeader');
+    const bankTransferDetails = document.getElementById('bankTransferDetails');
+    const destinationAccount = document.getElementById('destinationAccount');
+    const destinationAccountInfo = document.getElementById('destinationAccountInfo');
+    const accountHolderName = document.getElementById('accountHolderName');
+    const accountNumberDisplay = document.getElementById('accountNumberDisplay');
+    const bankLogoCard = document.getElementById('bankLogoCard');
+    const proofOfTransfer = document.getElementById('proofOfTransfer');
+    const fileUploadText = document.getElementById('fileUploadText');
+
+    // Bank amount input handler
+    if (bankAmountInput) {
+        function updateBankTransferAmounts(amount) {
+            const numAmount = parseFloat(amount) || 0;
+            const formattedAmount = numAmount.toLocaleString('id-ID');
+            
+            if (bankTransferAmountValue) {
+                bankTransferAmountValue.textContent = formattedAmount;
+            }
+            if (bankDetailTransferAmount) {
+                bankDetailTransferAmount.textContent = 'IDR ' + formattedAmount;
+            }
+            if (bankDetailReceivedAmount) {
+                bankDetailReceivedAmount.textContent = 'IDR ' + formattedAmount;
+            }
+        }
+
+        bankAmountInput.addEventListener('focus', function() {
+            if (this.value === '0' || this.value === '0.00') {
+                this.value = '';
+            }
+        });
+
+        bankAmountInput.addEventListener('blur', function() {
+            if (this.value === '' || this.value === '0') {
+                this.value = '0';
+                updateBankTransferAmounts(0);
+            } else {
+                const num = parseFloat(this.value.replace(/[^\\d.]/g, ''));
+                if (!isNaN(num)) {
+                    this.value = num.toString();
+                    updateBankTransferAmounts(num);
+                }
+            }
+        });
+
+        bankAmountInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^\\d.]/g, '');
+            const parts = this.value.split('.');
+            if (parts.length > 2) {
+                this.value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            const num = parseFloat(this.value) || 0;
+            updateBankTransferAmounts(num);
+        });
+    }
+
+    // Bank transfer details toggle
+    if (bankTransferHeader && bankTransferDetails) {
+        bankTransferHeader.addEventListener('click', function() {
+            const isHidden = bankTransferDetails.style.display === 'none';
+            const toggleBtn = this.querySelector('.transfer-toggle-btn');
+            
+            if (isHidden) {
+                bankTransferDetails.style.display = 'block';
+                if (toggleBtn) toggleBtn.style.transform = 'rotate(180deg)';
+            } else {
+                bankTransferDetails.style.display = 'none';
+                if (toggleBtn) toggleBtn.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+
+    // Destination account selection handler
+    if (destinationAccount) {
+        destinationAccount.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const bank = selectedOption.getAttribute('data-bank');
+            const holder = selectedOption.getAttribute('data-holder');
+            const accountNumber = selectedOption.value.split('-')[1];
+
+            if (this.value && destinationAccountInfo) {
+                destinationAccountInfo.style.display = 'block';
+                
+                if (accountHolderName) {
+                    accountHolderName.textContent = holder || 'N/A';
+                }
+                
+                if (accountNumberDisplay) {
+                    accountNumberDisplay.textContent = accountNumber || '';
+                }
+                
+                // Update bank logo based on bank
+                if (bankLogoCard && bank) {
+                    const bankLogos = {
+                        'BCA': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg',
+                        'Mandiri': 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg',
+                        'BNI': 'https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg'
+                    };
+                    bankLogoCard.src = bankLogos[bank] || bankLogos['BCA'];
+                }
+            } else {
+                if (destinationAccountInfo) {
+                    destinationAccountInfo.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    // File upload handler
+    if (proofOfTransfer && fileUploadText) {
+        proofOfTransfer.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                fileUploadText.textContent = this.files[0].name;
+            } else {
+                fileUploadText.textContent = 'tidak ada file yang dipilih';
+            }
+        });
+    }
+
+    // Copy account number function
+    window.copyAccountNumber = function() {
+        const accountNumber = document.getElementById('accountNumberDisplay').textContent;
+        navigator.clipboard.writeText(accountNumber.replace(/-/g, '')).then(function() {
+            alert('Nomor rekening berhasil disalin!');
+        }).catch(function(err) {
+            console.error('Failed to copy:', err);
+        });
+    };
 
     // Form submission
     document.querySelector('.submit-btn').addEventListener('click', function(e) {
