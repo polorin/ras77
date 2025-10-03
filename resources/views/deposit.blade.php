@@ -1,4 +1,4 @@
-@extends('home')
+@extends('layouts.main')
 
 @section('title', 'Deposit')
 
