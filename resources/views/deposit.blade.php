@@ -158,11 +158,21 @@
                 <div class="account-select-container">
                     <select class="account-select" id="sourceAccount">
                         <option value="">Pilih Akun Asal</option>
-                        <option value="bca-1299929912">BCA - 1299929912</option>
-                        <option value="bni-1234567890">BNI - 1234567890</option>
-                        <option value="mandiri-9876543210">Mandiri - 9876543210</option>
+                        @if(Auth::check())
+                            @php
+                                // Get user's registered bank accounts
+                                $user = Auth::user();
+                                // For now, displaying primary account from registration
+                                // In future, this can fetch from a separate user_bank_accounts table
+                            @endphp
+                            @if($user->provider && $user->account_number)
+                                <option value="{{ strtolower($user->provider) }}-{{ $user->account_number }}" selected>
+                                    {{ $user->provider }} - {{ $user->account_number }}
+                                </option>
+                            @endif
+                        @endif
                     </select>
-                    <button class="add-account-btn" type="button">
+                    <button class="add-account-btn" type="button" id="showBankAccountsBtn">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         </svg>
@@ -264,6 +274,161 @@
     <div class="tab-content" id="withdrawal-content">
         <div class="coming-soon">
             <p>Fitur Penarikan akan segera hadir...</p>
+        </div>
+    </div>
+
+    <!-- Modal: Bank Akun Asal (List of User's Bank Accounts) -->
+    <div class="modal-overlay" id="bankAccountsModal" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Bank Akun Asal</h3>
+                <button class="modal-close-btn" onclick="closeBankAccountsModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- List of User's Bank Accounts -->
+                <div class="bank-accounts-list" id="bankAccountsList">
+                    @if(Auth::check() && Auth::user()->provider && Auth::user()->account_number)
+                        @php
+                            $user = Auth::user();
+                        @endphp
+                        <div class="bank-account-item">
+                            <div class="account-radio">
+                                <input type="radio" name="selected_account" value="{{ strtolower($user->provider) }}-{{ $user->account_number }}" id="account_primary" checked>
+                            </div>
+                            <div class="account-info">
+                                <div class="bank-logo-container">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="{{ $user->provider }}" class="account-bank-logo">
+                                </div>
+                                <div class="account-details">
+                                    <div class="account-bank-number">{{ $user->provider }} | {{ $user->account_number }}</div>
+                                    <div class="account-holder">{{ $user->full_name ?? $user->name }}</div>
+                                </div>
+                            </div>
+                            <div class="account-status">
+                                <span class="status-indicator active"></span>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Add Account Button -->
+                <div class="add-account-section">
+                    <button class="add-account-modal-btn" type="button" onclick="showAddAccountModal()">
+                        <div class="add-account-icon">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <rect x="5" y="10" width="30" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 15H32M20 22V26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="add-account-text">TAMBAH AKUN</span>
+                        <div class="add-account-plus">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Add New Account Form -->
+    <div class="modal-overlay" id="addAccountModal" style="display: none;">
+        <div class="modal-container modal-form">
+            <div class="modal-header">
+                <h3 class="modal-title">Akun <span class="required">*</span></h3>
+                <button class="modal-close-btn" onclick="closeAddAccountModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addAccountForm" class="add-account-form">
+                    <!-- Pilih Akun (Bank Dropdown) -->
+                    <div class="form-group-modal">
+                        <label class="form-label-modal">Akun <span class="required">*</span></label>
+                        <div class="custom-select-wrapper">
+                            <select class="form-select-modal" id="bankProviderSelect" required>
+                                <option value="">— Pilih Akun —</option>
+                                <option value="Bank Central Asia (BCA)">Bank Central Asia (BCA)</option>
+                                <option value="Bank Mandiri">Bank Mandiri</option>
+                                <option value="Bank Negara Indonesia (BNI)">Bank Negara Indonesia (BNI)</option>
+                                <option value="Bank Rakyat Indonesia (BRI)">Bank Rakyat Indonesia (BRI)</option>
+                                <option value="Bank CIMB Niaga">Bank CIMB Niaga</option>
+                                <option value="Bank Danamon">Bank Danamon</option>
+                                <option value="Bank Permata">Bank Permata</option>
+                                <option value="Bank Tabungan Negara (BTN)">Bank Tabungan Negara (BTN)</option>
+                                <option value="Bank Mega">Bank Mega</option>
+                                <option value="Bank Panin">Bank Panin</option>
+                                <option value="Bank OCBC NISP">Bank OCBC NISP</option>
+                                <option value="Bank Sinarmas">Bank Sinarmas</option>
+                                <option value="Bank Bukopin">Bank Bukopin</option>
+                                <option value="Bank BTPN">Bank BTPN</option>
+                                <option value="Bank Maybank Indonesia">Bank Maybank Indonesia</option>
+                                <option value="Bank HSBC Indonesia">Bank HSBC Indonesia</option>
+                                <option value="Bank Muamalat">Bank Muamalat</option>
+                                <option value="Bank Syariah Indonesia">Bank Syariah Indonesia</option>
+                                <option value="Bank Jago">Bank Jago</option>
+                                <option value="Bank Commonwealth">Bank Commonwealth</option>
+                                <option value="Bank Mayora">Bank Mayora</option>
+                                <option value="Bank Mestika">Bank Mestika</option>
+                                <option value="Bank Victoria">Bank Victoria</option>
+                                <option value="Bank Woori Saudara">Bank Woori Saudara</option>
+                                <option value="BPD DKI">BPD DKI</option>
+                                <option value="BPD Jabar Banten (BJB)">BPD Jabar Banten (BJB)</option>
+                                <option value="BPD Jawa Tengah (Bank Jateng)">BPD Jawa Tengah (Bank Jateng)</option>
+                                <option value="BPD Jawa Timur (Bank Jatim)">BPD Jawa Timur (Bank Jatim)</option>
+                                <option value="BPD Sumatera Utara (Bank Sumut)">BPD Sumatera Utara (Bank Sumut)</option>
+                                <option value="BPD Sumatera Barat (Bank Nagari)">BPD Sumatera Barat (Bank Nagari)</option>
+                                <option value="BPD Aceh">BPD Aceh</option>
+                                <option value="BPD Riau Kepri">BPD Riau Kepri</option>
+                                <option value="BPD Sumsel Babel">BPD Sumsel Babel</option>
+                                <option value="BPD Kalimantan Barat">BPD Kalimantan Barat</option>
+                                <option value="BPD Kalimantan Selatan">BPD Kalimantan Selatan</option>
+                                <option value="BPD Kalimantan Timur">BPD Kalimantan Timur</option>
+                                <option value="BPD Papua">BPD Papua</option>
+                                <option value="BPD Nusa Tenggara Timur (Bank NTT)">BPD Nusa Tenggara Timur (Bank NTT)</option>
+                                <option value="BPD Nusa Tenggara Barat (Bank NTB)">BPD Nusa Tenggara Barat (Bank NTB)</option>
+                            </select>
+                            <div class="select-arrow">
+                                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                    <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nomor Rekening -->
+                    <div class="form-group-modal">
+                        <label class="form-label-modal">Nomor Rekening <span class="required">*</span></label>
+                        <input type="text" 
+                               class="form-input-modal" 
+                               id="accountNumberInput" 
+                               placeholder="Nomor Rekening Anda"
+                               required>
+                    </div>
+
+                    <!-- Nama Lengkap (Readonly) -->
+                    <div class="form-group-modal">
+                        <label class="form-label-modal">Nama Lengkap <span class="required">*</span></label>
+                        <input type="text" 
+                               class="form-input-modal" 
+                               id="fullNameInput" 
+                               value="{{ Auth::check() ? (Auth::user()->full_name ?? Auth::user()->name) : '' }}"
+                               readonly>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-account-btn">
+                        Tambahkan Akun
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -883,6 +1048,329 @@
         height: 40px;
     }
 }
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.modal-container {
+    background: #1a1a1a;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #2d2d2d;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.modal-title {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+    color: white;
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Bank Accounts List Modal */
+.bank-accounts-list {
+    margin-bottom: 24px;
+}
+
+.bank-account-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #2d2d2d;
+    border: 2px solid #2d2d2d;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.bank-account-item:hover {
+    background: #3a3a3a;
+    border-color: #ff9500;
+}
+
+.account-radio input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #4ade80;
+}
+
+.account-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.bank-logo-container {
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.account-bank-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.account-details {
+    flex: 1;
+}
+
+.account-bank-number {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.account-holder {
+    color: #999;
+    font-size: 12px;
+}
+
+.account-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-indicator {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #666;
+    background: transparent;
+}
+
+.status-indicator.active {
+    background: #4ade80;
+    border-color: #4ade80;
+}
+
+/* Add Account Section */
+.add-account-section {
+    margin-top: 24px;
+}
+
+.add-account-modal-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: #2d2d2d;
+    border: 2px solid #3a3a3a;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: white;
+}
+
+.add-account-modal-btn:hover {
+    background: #3a3a3a;
+    border-color: #ff9500;
+}
+
+.add-account-icon {
+    color: #999;
+}
+
+.add-account-text {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.add-account-plus {
+    width: 32px;
+    height: 32px;
+    background: #1a1a2e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+/* Add Account Form Modal */
+.modal-form {
+    max-width: 460px;
+}
+
+.add-account-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label-modal {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.custom-select-wrapper {
+    position: relative;
+}
+
+.form-select-modal {
+    width: 100%;
+    padding: 14px 16px;
+    background: #2d2d2d;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    appearance: none;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.form-select-modal:focus {
+    border-color: #ff9500;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+}
+
+.form-input-modal {
+    width: 100%;
+    padding: 14px 16px;
+    background: #2d2d2d;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.form-input-modal:focus {
+    border-color: #ff9500;
+}
+
+.form-input-modal:read-only {
+    background: #1a1a1a;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.form-input-modal::placeholder {
+    color: #666;
+}
+
+.submit-account-btn {
+    width: 100%;
+    padding: 14px 24px;
+    background: #1a1a2e;
+    border: none;
+    border-radius: 24px;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 8px;
+}
+
+.submit-account-btn:hover {
+    background: #252540;
+}
+
+.submit-account-btn:active {
+    transform: scale(0.98);
+}
+
+/* Modal Responsive */
+@media (max-width: 640px) {
+    .modal-container {
+        max-width: 100%;
+        max-height: 85vh;
+    }
+    
+    .modal-header {
+        padding: 16px 20px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .bank-account-item {
+        padding: 12px;
+    }
+    
+    .account-bank-number {
+        font-size: 13px;
+    }
+}
 </style>
 @endpush
 
@@ -1176,6 +1664,121 @@ document.addEventListener('DOMContentLoaded', function() {
 
         alert('Fitur deposit akan segera diaktifkan!');
     });
+
+    // Modal Functions
+    const bankAccountsModal = document.getElementById('bankAccountsModal');
+    const addAccountModal = document.getElementById('addAccountModal');
+    const showBankAccountsBtn = document.getElementById('showBankAccountsBtn');
+
+    // Show Bank Accounts Modal
+    if (showBankAccountsBtn) {
+        showBankAccountsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showBankAccountsModal();
+        });
+    }
+
+    // Close modal when clicking outside
+    if (bankAccountsModal) {
+        bankAccountsModal.addEventListener('click', function(e) {
+            if (e.target === bankAccountsModal) {
+                closeBankAccountsModal();
+            }
+        });
+    }
+
+    if (addAccountModal) {
+        addAccountModal.addEventListener('click', function(e) {
+            if (e.target === addAccountModal) {
+                closeAddAccountModal();
+            }
+        });
+    }
+
+    // Add Account Form Submit
+    const addAccountForm = document.getElementById('addAccountForm');
+    if (addAccountForm) {
+        addAccountForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const bankProvider = document.getElementById('bankProviderSelect').value;
+            const accountNumber = document.getElementById('accountNumberInput').value;
+            const fullName = document.getElementById('fullNameInput').value;
+
+            if (!bankProvider || !accountNumber) {
+                alert('Silakan lengkapi semua field');
+                return;
+            }
+
+            // Here you would normally send this data to the server
+            // For now, we'll just add it to the list and update the dropdown
+            console.log('Adding new account:', {
+                provider: bankProvider,
+                accountNumber: accountNumber,
+                fullName: fullName
+            });
+
+            // TODO: Send to server via AJAX
+            // For now, just show success message
+            alert('Akun berhasil ditambahkan!');
+            
+            // Reset form
+            addAccountForm.reset();
+            document.getElementById('fullNameInput').value = fullName; // Restore readonly value
+            
+            // Close modals
+            closeAddAccountModal();
+            closeBankAccountsModal();
+
+            // Refresh page to show new account (temporary solution)
+            // In production, you'd update the DOM dynamically
+            // window.location.reload();
+        });
+    }
 });
+
+// Global functions for modal controls
+function showBankAccountsModal() {
+    const modal = document.getElementById('bankAccountsModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeBankAccountsModal() {
+    const modal = document.getElementById('bankAccountsModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+function showAddAccountModal() {
+    const bankAccountsModal = document.getElementById('bankAccountsModal');
+    const addAccountModal = document.getElementById('addAccountModal');
+    
+    // Hide bank accounts modal
+    if (bankAccountsModal) {
+        bankAccountsModal.style.display = 'none';
+    }
+    
+    // Show add account modal
+    if (addAccountModal) {
+        addAccountModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeAddAccountModal() {
+    const addAccountModal = document.getElementById('addAccountModal');
+    if (addAccountModal) {
+        addAccountModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Show back the bank accounts modal
+    showBankAccountsModal();
+}
 </script>
 @endpush
